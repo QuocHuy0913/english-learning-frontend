@@ -60,7 +60,7 @@ src/
 
 ⚙️ Cài đặt và chạy dự án
 1️⃣ Clone repository
-git clone https://github.com/<your-username>/<your-frontend-repo>.git
+git clone https://github.com/QuocHuy0913/english-learning-frontend.git
 cd <your-frontend-repo>
 
 2️⃣ Cài đặt dependencies
