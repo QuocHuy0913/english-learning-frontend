@@ -18,6 +18,10 @@ export interface AnswerCreatePayload {
   content: string
 }
 
+export interface TotalLikesResponse {
+  totalLikes: number
+}
+
 export async function fetchAnswersByQuestion(questionId: number) {
   return await api.get<Answer[]>(`/answers/questions/${questionId}`)
 }
@@ -45,4 +49,8 @@ export async function unlikeAnswer(answerId: number) {
 
 export async function createReply(parentAnswerId: number, payload: ReplyCreatePayload) {
   return await api.post(`/answers/${parentAnswerId}/replies`, payload)
+}
+
+export async function fetchTotalLikes() {
+  return await api.get<TotalLikesResponse>('/answers/likes/total')
 }

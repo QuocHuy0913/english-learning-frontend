@@ -3,6 +3,8 @@ import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import QuestionCard from '../components/QuestionCard.vue';
 import { fetchQuestions, type Question } from '../api/questions';
+import { fetchUserCount } from '@/api/users';
+import { fetchTotalLikes } from '@/api/answers';
 
 const router = useRouter();
 const route = useRoute();
@@ -13,16 +15,39 @@ const page = ref(1);
 const total = ref(0);
 const limit = 10;
 
+const totalUsers = ref(0);
+const totalQuestions = ref(0);
+const totalLikes = ref(0);
+
 async function loadQuestions() {
   loading.value = true;
   try {
     const res = await fetchQuestions(page.value, limit, search.value);
     questions.value = res.data.items;
     total.value = res.data.total;
+    totalQuestions.value = res.data.total;
   } catch (e) {
     console.error(e);
   } finally {
     loading.value = false;
+  }
+}
+
+async function loadUserCount() {
+  try {
+    const res = await fetchUserCount();
+    totalUsers.value = res.data.totalUsers;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadTotalLikes() {
+  try {
+    const res = await fetchTotalLikes();
+    totalLikes.value = res.data.totalLikes;
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -62,7 +87,9 @@ function nextPage() {
   }
 }
 
-onMounted(loadQuestions);
+onMounted(() => {
+  loadQuestions(); loadUserCount(); loadTotalLikes();
+});
 
 </script>
 <template>
@@ -77,18 +104,18 @@ onMounted(loadQuestions);
         <div class="d-flex justify-content-center gap-5 mb-4 flex-wrap">
           <div>
             <i class="bi bi-people text-success fs-4"></i>
-            <h4 class="fw-bold text-success mb-0">2,847</h4>
+            <h4 class="fw-bold text-success mb-0">{{ totalUsers.toLocaleString() }}</h4>
             <small class="text-muted">Active Learners</small>
           </div>
           <div>
             <i class="bi bi-chat-left-text text-success fs-4"></i>
-            <h4 class="fw-bold text-success mb-0">1,293</h4>
+            <h4 class="fw-bold text-success mb-0">{{ totalQuestions.toLocaleString() }}</h4>
             <small class="text-muted">Questions Answered</small>
           </div>
           <div>
             <i class="bi bi-star text-success fs-4"></i>
-            <h4 class="fw-bold text-success mb-0">4.8</h4>
-            <small class="text-muted">Community Rating</small>
+            <h4 class="fw-bold text-success mb-0">{{ totalLikes.toLocaleString() }}</h4>
+            <small class="text-muted">Total Likes</small>
           </div>
         </div>
         <!-- Search -->
