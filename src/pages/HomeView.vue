@@ -102,7 +102,7 @@ onMounted(() => {
         <p class="text-muted fs-5 mb-4"> Hỏi, trả lời và cùng nhau phát triển. Kết nối với các học viên và người bản xứ
           để cải thiện kỹ năng tiếng Anh của bạn. </p>
         <!-- Stats -->
-        <div class="d-flex justify-content-center gap-5 mb-4 flex-column flex-md-row align-items-center">
+        <div class="d-flex justify-content-center mb-4 flex-column flex-md-row align-items-center gap-2 gap-md-5">
           <div class="text-center">
             <i class="bi bi-people text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalUsers.toLocaleString() }}</h4>
