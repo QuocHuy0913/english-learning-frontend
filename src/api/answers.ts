@@ -54,4 +54,3 @@ export async function createReply(parentAnswerId: number, payload: ReplyCreatePa
 export async function fetchTotalLikes() {
   return await api.get<TotalLikesResponse>('/answers/likes/total')
 }
-

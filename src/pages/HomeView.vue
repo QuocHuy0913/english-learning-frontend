@@ -102,18 +102,18 @@ onMounted(() => {
         <p class="text-muted fs-5 mb-4"> Hỏi, trả lời và cùng nhau phát triển. Kết nối với các học viên và người bản xứ
           để cải thiện kỹ năng tiếng Anh của bạn. </p>
         <!-- Stats -->
-        <div class="d-flex justify-content-center gap-5 mb-4 flex-wrap">
-          <div>
+        <div class="d-flex justify-content-center gap-5 mb-4 flex-column flex-md-row align-items-center">
+          <div class="text-center">
             <i class="bi bi-people text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalUsers.toLocaleString() }}</h4>
             <small class="text-muted">Người dùng hoạt động</small>
           </div>
-          <div>
+          <div class="text-center">
             <i class="bi bi-chat-left-text text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalQuestions.toLocaleString() }}</h4>
             <small class="text-muted">Câu hỏi đã đăng</small>
           </div>
-          <div>
+          <div class="text-center">
             <i class="bi bi-star text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalLikes.toLocaleString() }}</h4>
             <small class="text-muted">Tổng lượt thích</small>
