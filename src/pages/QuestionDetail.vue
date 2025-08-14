@@ -53,7 +53,7 @@ function onTagClick(tag: string) {
 async function submitAnswer() {
   error.value = '';
   if (!answerContent.value.trim()) {
-    error.value = 'Answer content cannot be empty';
+    error.value = 'Nội dung câu trả lời không được để trống';
     return;
   }
   try {
@@ -62,7 +62,7 @@ async function submitAnswer() {
     const res = await fetchAnswersByQuestion(questionId);
     answers.value = res.data;
   } catch {
-    error.value = 'Failed to post answer. Please login.';
+    error.value = 'Đăng câu trả lời thất bại. Vui lòng đăng nhập.';
   }
 }
 
@@ -74,17 +74,17 @@ function onUpdate() {
 // Nút delete
 async function onDelete() {
   deleteError.value = '';
-  if (!confirm('Are you sure you want to delete this question?')) {
+  if (!confirm('Bạn có chắc muốn xóa câu hỏi này không?')) {
     return;
   }
   try {
     await deleteQuestion(questionId);
-    successMessage.value = 'Delete question successfully!';
+    successMessage.value = 'Xóa câu hỏi thành công!';
     setTimeout(() => {
       router.push({ name: 'Home' });
     }, 1500); // đợi 1.5 giây rồi chuyển
   } catch {
-    deleteError.value = 'Failed to delete question.';
+    deleteError.value = 'Xóa câu hỏi thất bại.';
   }
 }
 
@@ -92,7 +92,6 @@ async function onDelete() {
 async function handleDeleteAnswer(answerId: number) {
   try {
     await deleteAnswer(answerId);
-    // Cập nhật lại danh sách answers sau khi xóa
     const res = await fetchAnswersByQuestion(questionId);
     answers.value = res.data;
   } catch {
@@ -107,12 +106,12 @@ onMounted(loadData);
        style="max-width: 720px;">
     <button class="btn btn-outline-success mb-3 fw-semibold"
             @click="router.back()">
-      <i class="bi bi-arrow-left me-1"></i> Back </button>
+      <i class="bi bi-arrow-left me-1"></i> Quay lại </button>
     <div v-if="loading"
          class="text-center my-5">
       <div class="spinner-border text-success"
            role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">Đang tải...</span>
       </div>
     </div>
     <div v-else-if="question"
@@ -124,14 +123,14 @@ onMounted(loadData);
                class="d-flex flex-column flex-md-row gap-2">
             <button class="btn btn-success d-flex align-items-center"
                     @click="onUpdate">
-              <i class="bi bi-pencil-square me-1"></i> Update </button>
+              <i class="bi bi-pencil-square me-1"></i> Sửa </button>
             <button class="btn btn-danger d-flex align-items-center"
                     @click="onDelete">
-              <i class="bi bi-trash me-1"></i> Delete </button>
+              <i class="bi bi-trash me-1"></i> Xóa </button>
           </div>
         </div>
         <div class="text-muted mb-3">
-          <small>By {{ question.user.name }} — {{ new Date(question.created_at).toLocaleString() }}</small>
+          <small>Người đăng: {{ question.user.name }} — {{ new Date(question.created_at).toLocaleString() }}</small>
         </div>
         <div class="mb-4">
           <span v-for="tag in question.tags"
@@ -146,12 +145,12 @@ onMounted(loadData);
              class="alert alert-danger">{{ deleteError }}</div>
       </div>
     </div>
-    <!-- phần answers và post answer giữ nguyên -->
+    <!-- phần answers -->
     <div v-if="question"
          class="mb-4">
-      <h5 class="fw-bold mb-3">Answers ({{ answers.length }})</h5>
+      <h5 class="fw-bold mb-3">Các câu trả lời ({{ answers.length }})</h5>
       <div v-if="answers.length === 0"
-           class="alert alert-secondary"> No answers yet. </div>
+           class="alert alert-secondary">Chưa có câu trả lời nào.</div>
       <div>
         <AnswerCard v-for="ans in answers"
                     :key="ans.id"
@@ -160,50 +159,22 @@ onMounted(loadData);
                     @delete="handleDeleteAnswer" />
       </div>
     </div>
+    <!-- form post answer -->
     <div v-if="authStore.accessToken"
          class="card p-3 mb-5 border-success border-2 shadow-sm">
-      <h6 class="fw-bold mb-3">Your Answer</h6>
+      <h6 class="fw-bold mb-3">Câu trả lời của bạn</h6>
       <textarea class="form-control"
                 rows="5"
                 v-model="answerContent"
-                placeholder="Write your answer here"></textarea>
+                placeholder="Viết câu trả lời tại đây"></textarea>
       <div class="text-danger mt-2"
            v-if="error">{{ error }}</div>
       <button class="btn btn-success mt-3 px-4 fw-semibold"
-              @click="submitAnswer"> Post Answer </button>
+              @click="submitAnswer">Đăng câu trả lời</button>
     </div>
     <div v-else
          class="text-center text-muted my-4">
-      <em>Please login to post an answer.</em>
+      <em>Vui lòng đăng nhập để đăng câu trả lời.</em>
     </div>
   </div>
 </template>
-<style scoped>
-.action-buttons button {
-  padding: 6px 14px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: background-color 0.25s ease;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-update {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-update:hover {
-  background-color: #218838;
-}
-
-.btn-delete {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-delete:hover {
-  background-color: #c82333;
-}
-</style>

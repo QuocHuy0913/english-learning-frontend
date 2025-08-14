@@ -88,34 +88,35 @@ function nextPage() {
 }
 
 onMounted(() => {
-  loadQuestions(); loadUserCount(); loadTotalLikes();
+  loadQuestions();
+  loadUserCount();
+  loadTotalLikes();
 });
-
 </script>
 <template>
   <div class="bg-success bg-opacity-10 min-vh-100">
     <!-- Hero -->
     <div class="text-center py-5 bg-opacity-25">
       <div class="container">
-        <h1 class="fw-bold display-5 mb-3">Join Our Community of English Learners!</h1>
-        <p class="text-muted fs-5 mb-4"> Ask, answer, and grow together. Connect with fellow learners and native
-          speakers to improve your English skills. </p>
+        <h1 class="fw-bold display-5 mb-3">Tham Gia Cộng Đồng Học Tiếng Anh!</h1>
+        <p class="text-muted fs-5 mb-4"> Hỏi, trả lời và cùng nhau phát triển. Kết nối với các học viên và người bản xứ
+          để cải thiện kỹ năng tiếng Anh của bạn. </p>
         <!-- Stats -->
         <div class="d-flex justify-content-center gap-5 mb-4 flex-wrap">
           <div>
             <i class="bi bi-people text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalUsers.toLocaleString() }}</h4>
-            <small class="text-muted">Active Learners</small>
+            <small class="text-muted">Người dùng hoạt động</small>
           </div>
           <div>
             <i class="bi bi-chat-left-text text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalQuestions.toLocaleString() }}</h4>
-            <small class="text-muted">Questions Answered</small>
+            <small class="text-muted">Câu hỏi đã đăng</small>
           </div>
           <div>
             <i class="bi bi-star text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalLikes.toLocaleString() }}</h4>
-            <small class="text-muted">Total Likes</small>
+            <small class="text-muted">Tổng lượt thích</small>
           </div>
         </div>
         <!-- Search -->
@@ -126,7 +127,7 @@ onMounted(() => {
           </span>
           <input type="text"
                  class="form-control border-0 fs-5 py-3"
-                 placeholder="Search questions..."
+                 placeholder="Tìm kiếm câu hỏi..."
                  v-model="search"
                  @keyup.enter="onSearch">
         </div>
@@ -135,13 +136,13 @@ onMounted(() => {
     <!-- Questions -->
     <div class="container mt-5">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold">Recent Questions</h4>
-        <small class="text-muted">{{ total }} questions found</small>
+        <h4 class="fw-bold">Câu hỏi mới nhất</h4>
+        <small class="text-muted">{{ total }} câu hỏi được tìm thấy</small>
       </div>
       <div v-if="loading"
-           class="text-center my-5">Loading...</div>
+           class="text-center my-5">Đang tải...</div>
       <div v-else-if="questions.length === 0"
-           class="text-center my-5 text-muted"> No questions found </div>
+           class="text-center my-5 text-muted">Không tìm thấy câu hỏi nào</div>
       <div v-else
            class="row g-3">
         <div class="col-12"
@@ -155,19 +156,19 @@ onMounted(() => {
     <div class="d-flex justify-content-center align-items-center gap-3 my-4">
       <button class="btn btn-outline-success"
               @click="prevPage"
-              :disabled="page === 1"> Previous </button>
-      <span>Page {{ page }} of {{ Math.ceil(total / limit) }}</span>
+              :disabled="page === 1"> Trước </button>
+      <span>Trang {{ page }} trên {{ Math.ceil(total / limit) }}</span>
       <button class="btn btn-outline-success"
               @click="nextPage"
-              :disabled="page >= Math.ceil(total / limit)"> Next </button>
+              :disabled="page >= Math.ceil(total / limit)"> Tiếp </button>
     </div>
     <!-- Footer CTA -->
     <div class="container my-5">
       <div class="card border-0 shadow-sm rounded-4 text-center p-4 bg-opacity-25">
-        <h4 class="fw-bold mb-3">Connect with Others</h4>
-        <p class="text-muted"> Share your journey, learn from peers, and build lasting connections in our supportive
-          English learning community. </p>
-        <button class="btn btn-success rounded-pill px-4 fw-semibold"> Join a Discussion </button>
+        <h4 class="fw-bold mb-3">Kết nối với cộng đồng</h4>
+        <p class="text-muted"> Chia sẻ hành trình học tập, học hỏi từ những người cùng chí hướng và xây dựng các kết nối
+          bền vững trong cộng đồng học tiếng Anh. </p>
+        <button class="btn btn-success rounded-pill px-4 fw-semibold">Tham gia thảo luận</button>
       </div>
     </div>
   </div>

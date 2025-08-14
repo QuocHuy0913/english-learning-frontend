@@ -20,7 +20,7 @@ async function submit() {
     authStore.setUser(res.data.user);
     router.push({ name: 'Home' });
   } catch {
-    error.value = 'Invalid email or password';
+    error.value = 'Email hoặc mật khẩu không hợp lệ';
   }
 }
 
@@ -35,13 +35,13 @@ function goToRegister() {
       <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
         <div class="text-center mb-4">
           <i class="bi bi-book fs-1 text-success"></i>
-          <h3 class="fw-bold text-success mt-2">Welcome Back!</h3>
-          <p class="text-muted">Log in to continue your English learning journey.</p>
+          <h3 class="fw-bold text-success mt-2">Chào mừng trở lại!</h3>
+          <p class="text-muted">Đăng nhập để tiếp tục hành trình học tiếng Anh của bạn.</p>
         </div>
         <form @submit.prevent="submit">
           <div class="mb-3">
             <label for="email"
-                   class="form-label fw-semibold">Email address</label>
+                   class="form-label fw-semibold">Email</label>
             <input type="email"
                    class="form-control form-control-lg"
                    id="email"
@@ -50,7 +50,7 @@ function goToRegister() {
           </div>
           <div class="mb-3">
             <label for="password"
-                   class="form-label fw-semibold">Password</label>
+                   class="form-label fw-semibold">Mật khẩu</label>
             <div class="input-group">
               <input :type="showPassword ? 'text' : 'password'"
                      class="form-control form-control-lg"
@@ -67,17 +67,17 @@ function goToRegister() {
           <div class="text-danger mb-3"
                v-if="error">{{ error }}</div>
           <button type="submit"
-                  class="btn btn-success w-100 rounded-pill fw-semibold p-2 mt-3"> Login </button>
+                  class="btn btn-success w-100 rounded-pill fw-semibold p-2 mt-3">Đăng nhập</button>
         </form>
         <div class="text-center m-2">
-          <small class="text-muted m-0">Don't have an account?</small>
+          <small class="text-muted m-0">Chưa có tài khoản?</small>
           <br />
           <button class="btn btn-outline-success rounded-pill px-4 fw-semibold m-2"
-                  @click="goToRegister"> Register </button>
+                  @click="goToRegister">Đăng ký</button>
         </div>
         <button class="btn btn-outline-success mt-2 fw-semibold"
                 @click="router.back()">
-          <i class="bi bi-arrow-left me-1"></i> Back </button>
+          <i class="bi bi-arrow-left me-1"></i> Trở lại </button>
       </div>
     </div>
   </div>

@@ -1,5 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts" setup>
+// eslint-disable @typescript-eslint/no-explicit-any
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { fetchMyQuestions, deleteQuestion, type Question } from '../api/questions';
@@ -22,7 +23,7 @@ async function loadQuestions() {
     questions.value = res.data.items;
     total.value = res.data.total;
   } catch (err: any) {
-    error.value = err?.message || 'Failed to load questions.';
+    error.value = err?.message || 'Không tải được câu hỏi.';
   } finally {
     loading.value = false;
   }
@@ -33,12 +34,12 @@ function onEdit(id: number) {
 }
 
 async function onDelete(id: number) {
-  if (!confirm('Are you sure you want to delete this question?')) return;
+  if (!confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')) return;
   try {
     await deleteQuestion(id);
     questions.value = questions.value.filter(q => q.id !== id);
   } catch {
-    alert('Failed to delete question.');
+    alert('Xóa câu hỏi thất bại.');
   }
 }
 
@@ -52,20 +53,22 @@ onMounted(loadQuestions);
   <div class="min-vh-100 bg-success bg-opacity-10 py-5">
     <div class="container"
          style="max-width: 800px;">
-      <h3 class="mb-4 align-content-center d-flex"> <button class="btn btn-outline-success me-3 fw-semibold"
+      <h3 class="mb-4 d-flex align-items-center">
+        <button class="btn btn-outline-success me-3 fw-semibold"
                 @click="router.back()">
-          <i class="bi bi-arrow-left me-1"></i> Back </button>Your Questions</h3>
+          <i class="bi bi-arrow-left me-1"></i> Quay lại </button> Câu hỏi của tôi
+      </h3>
       <div v-if="loading"
            class="text-center my-5">
         <div class="spinner-border text-success"
              role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">Đang tải...</span>
         </div>
       </div>
       <div v-if="error"
            class="alert alert-danger">{{ error }}</div>
       <div v-if="!loading && questions.length === 0"
-           class="text-center text-muted my-5"> No questions found </div>
+           class="text-center text-muted my-5"> Không có câu hỏi nào </div>
       <div class="row g-3">
         <div v-for="q in questions"
              :key="q.id"
@@ -76,25 +79,25 @@ onMounted(loadQuestions);
             <div class="mt-3 d-flex justify-content-end gap-2">
               <button class="btn btn-sm btn-outline-primary"
                       @click="onEdit(q.id)">
-                <i class="bi bi-pencil-square me-1"></i> Edit </button>
+                <i class="bi bi-pencil-square me-1"></i> Sửa </button>
               <button class="btn btn-sm btn-outline-danger"
                       @click="onDelete(q.id)">
-                <i class="bi bi-trash me-1"></i> Delete </button>
+                <i class="bi bi-trash me-1"></i> Xóa </button>
             </div>
           </div>
         </div>
       </div>
-      <!-- Pagination -->
+      <!-- Phân trang -->
       <div v-if="total > limit"
            class="d-flex justify-content-center align-items-center gap-3 mt-4">
         <button class="btn btn-outline-success btn-sm"
                 :disabled="page === 1"
                 @click="page--; loadQuestions();">
-          <i class="bi bi-chevron-left me-1"></i> Previous </button>
-        <span class="fw-semibold">Page {{ page }} of {{ Math.ceil(total / limit) }}</span>
+          <i class="bi bi-chevron-left me-1"></i> Trước </button>
+        <span class="fw-semibold">Trang {{ page }} / {{ Math.ceil(total / limit) }}</span>
         <button class="btn btn-outline-success btn-sm"
                 :disabled="page * limit >= total"
-                @click="page++; loadQuestions();"> Next <i class="bi bi-chevron-right ms-1"></i>
+                @click="page++; loadQuestions();"> Sau <i class="bi bi-chevron-right ms-1"></i>
         </button>
       </div>
     </div>

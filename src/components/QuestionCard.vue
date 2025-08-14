@@ -56,9 +56,9 @@ onMounted(async () => {
       </div>
       <!-- Stats -->
       <div class="d-flex text-muted small">
-        <div class="me-3"><i class="bi bi-hand-thumbs-up me-1"></i>{{ question.likes ?? 0 }}</div>
-        <div class="me-3"><i class="bi bi-chat-left-text me-1"></i>{{ question.comments ?? 0 }}</div>
-        <div><i class="bi bi-check2-circle me-1"></i>{{ answersCount }} answers</div>
+        <div class="me-3"><i class="bi bi-hand-thumbs-up me-1"></i>{{ question.likes ?? 0 }} lượt thích</div>
+        <div class="me-3"><i class="bi bi-chat-left-text me-1"></i>{{ question.comments ?? 0 }} bình luận</div>
+        <div><i class="bi bi-check2-circle me-1"></i>{{ answersCount }} câu trả lời</div>
       </div>
     </div>
   </div>

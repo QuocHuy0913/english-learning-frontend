@@ -42,7 +42,7 @@ function logout() {
           <li class="nav-item">
             <button class="btn btn-success rounded-pill px-3 fw-semibold"
                     @click="onAskClick">
-              <i class="bi bi-plus-lg me-1"></i> Ask Question </button>
+              <i class="bi bi-plus-lg me-1"></i> Đặt câu hỏi </button>
           </li>
           <!-- Auth status -->
           <li class="nav-item ms-lg-3 mt-2 mt-lg-0"
@@ -60,12 +60,12 @@ function logout() {
                 <li>
                   <button class="dropdown-item"
                           @click="router.push({ name: 'UserQuestions' })">
-                    <i class="bi bi-card-list me-2"></i> My Questions </button>
+                    <i class="bi bi-card-list me-2"></i> Câu hỏi của tôi </button>
                 </li>
                 <li>
                   <button class="dropdown-item text-danger"
                           @click="logout">
-                    <i class="bi bi-box-arrow-right me-2"></i> Logout </button>
+                    <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất </button>
                 </li>
               </ul>
             </div>
@@ -73,7 +73,7 @@ function logout() {
           <li class="nav-item ms-lg-3 mt-2 mt-lg-0"
               v-else>
             <button class="btn btn-outline-success rounded-pill px-3 fw-semibold"
-                    @click="router.push({ name: 'Login' })"> Login </button>
+                    @click="router.push({ name: 'Login' })"> Đăng nhập </button>
           </li>
         </ul>
       </div>
