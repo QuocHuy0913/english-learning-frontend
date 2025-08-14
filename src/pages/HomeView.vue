@@ -106,7 +106,7 @@ onMounted(() => {
           <div class="text-center">
             <i class="bi bi-people text-success fs-4"></i>
             <h4 class="fw-bold text-success mb-0">{{ totalUsers.toLocaleString() }}</h4>
-            <small class="text-muted">Người dùng hoạt động</small>
+            <small class="text-muted">Người dùng</small>
           </div>
           <div class="text-center">
             <i class="bi bi-chat-left-text text-success fs-4"></i>
