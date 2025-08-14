@@ -1,7 +1,15 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { createQuestion } from '../api/questions';
+import { getAiSuggestion } from '@/api/ai';
+import { debounce } from 'lodash';
+
+interface AiSuggestion {
+  title: string;
+  content: string;
+  tags: string;
+}
 
 const router = useRouter();
 
@@ -9,6 +17,32 @@ const title = ref('');
 const content = ref('');
 const tags = ref('');
 const error = ref('');
+const aiSuggestion = ref<AiSuggestion>({ title: '', content: '', tags: '' });
+const isLoadingSuggestion = ref(false);
+
+const fetchSuggestion = debounce(async (text: string) => {
+  if (!text.trim()) {
+    aiSuggestion.value = { title: '', content: '', tags: '' };
+    return;
+  }
+
+  isLoadingSuggestion.value = true;
+  try {
+    const response = await getAiSuggestion(text); // đảm bảo API trả về { suggestion: string }
+    aiSuggestion.value = response.data;
+  } catch (err) {
+    console.error('AI suggestion failed', err);
+    aiSuggestion.value = { title: '', content: '', tags: '' };
+  } finally {
+    isLoadingSuggestion.value = false;
+  }
+}, 500);
+
+watch([title, content, tags], ([newTitle, newContent, newTags]) => {
+  const combined = [newTitle, newContent, newTags].filter(Boolean).join(' ');
+  fetchSuggestion(combined);
+});
+
 
 async function submit() {
   error.value = '';
@@ -68,6 +102,11 @@ async function submit() {
                class="form-control shadow-sm"
                placeholder="Enter question title"
                required />
+        <div v-if="aiSuggestion.title"
+             class="text-muted fst-italic mt-1"> AI Suggestion: {{ aiSuggestion.title }} <button type="button"
+                  class="btn btn-sm btn-outline-success ms-2"
+                  @click="title = aiSuggestion.title">Use</button>
+        </div>
       </div>
       <div class="mb-4">
         <label for="content"
@@ -78,6 +117,11 @@ async function submit() {
                   class="form-control shadow-sm"
                   placeholder="Describe your question in detail"
                   required></textarea>
+        <div v-if="aiSuggestion.content"
+             class="text-muted fst-italic mt-1"> AI Suggestion: {{ aiSuggestion.content }} <button type="button"
+                  class="btn btn-sm btn-outline-success ms-2"
+                  @click="content = aiSuggestion.content">Use</button>
+        </div>
       </div>
       <div class="mb-4">
         <label for="tags"
@@ -87,6 +131,11 @@ async function submit() {
                type="text"
                class="form-control shadow-sm"
                placeholder="e.g. self learning, ielts, toeic, english basic" />
+        <div v-if="aiSuggestion.tags"
+             class="text-muted fst-italic mt-1"> AI Suggestion: {{ aiSuggestion.tags }} <button type="button"
+                  class="btn btn-sm btn-outline-success ms-2"
+                  @click="tags = aiSuggestion.tags">Use</button>
+        </div>
       </div>
       <div v-if="error"
            class="text-danger fw-semibold text-center mb-3">{{ error }}</div>

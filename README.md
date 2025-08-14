@@ -11,21 +11,28 @@ Website hỗ trợ người dùng đăng ký, đăng nhập, đặt câu hỏi, 
 - [JWT Authentication](https://jwt.io/) - Xác thực người dùng
 - [Vite](https://vitejs.dev/) - Build tool
 - [Vercel](https://vercel.com/) - Triển khai
+- [Hugging Face Inference API](https://huggingface.co/docs/api-inference) - Đề xuất nội dung thông minh
 
 ## 📌 Chức năng chính
 - Đăng ký tài khoản
 - Đăng nhập / Đăng xuất
 - Đăng câu hỏi
+- Gợi ý câu hỏi thông minh bằng AI khi người dùng tạo câu hỏi
 - Quản lý câu hỏi của bản thân
 - Trả lời câu hỏi
 - Quản lý câu trả lời của bản thân
 - Like / Unlike câu trả lời
 - Phân trang dữ liệu câu hỏi & câu trả lời
 
+### OpenAI
+Chứa hàm gọi API từ backend để gợi ý câu hỏi dựa trên từ khóa hoặc nội dung người dùng nhập.  
+Backend sẽ sử dụng mô hình AI để tạo ra gợi ý phù hợp.
+
 ## 📂 Cấu trúc thư mục chính
 ```plaintext
 src/
-├── api/                  # Chứa các file gọi API đến backend
+├── api/  
+│   ├── ai.ts             # Chứa các file gọi API AI
 │   ├── answers.ts        # API cho trả lời
 │   ├── auth.ts           # API cho đăng ký, đăng nhập
 │   ├── axios.ts          # Cấu hình Axios
