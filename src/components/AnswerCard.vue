@@ -109,10 +109,11 @@ const submitReport = async () => {
 <template>
   <div class="card mb-2 p-3">
     <!-- Nội dung answer -->
-    <div class="d-flex justify-content-between align-items-start mb-2">
+    <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+      <!-- Nội dung -->
       <div class="flex-grow-1 me-3"
            style="white-space: pre-line; margin-bottom:0;">
-        <template v-if="!isEditing"> {{ editedContent }} </template>
+        <template v-if="!isEditing">{{ editedContent }}</template>
         <template v-else>
           <textarea v-model="editedContent"
                     class="form-control"></textarea>
@@ -126,20 +127,20 @@ const submitReport = async () => {
           </div>
         </template>
       </div>
-      <div v-if="canEdit && !isEditing"
-           class="d-flex gap-2">
-        <button class="btn btn-sm btn-outline-primary"
+      <!-- Các nút hành động -->
+      <div class="d-flex flex-wrap gap-2 mt-2 mt-sm-0">
+        <button v-if="canEdit && !isEditing"
+                class="btn btn-sm btn-outline-primary"
                 @click="startEdit">Sửa</button>
-        <button class="btn btn-sm btn-outline-danger"
+        <button v-if="canEdit && !isEditing"
+                class="btn btn-sm btn-outline-danger"
                 @click="deleteAnswer">Xóa</button>
-      </div>
-      <div v-if="currentUser"
-           class="ms-2">
-        <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2 py-1"
+        <button v-if="currentUser"
+                class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2 py-1"
                 style="white-space: nowrap;"
                 @click="onReport">
           <i class="bi bi-flag"></i>
-          <span>Báo cáo</span>
+          <span class="d-none d-sm-inline">Báo cáo</span>
         </button>
       </div>
     </div>
@@ -214,6 +215,13 @@ const submitReport = async () => {
   </div>
 </template>
 <style scoped>
+@media (max-width: 576px) {
+  .card .btn {
+    font-size: 0.8rem;
+    padding: 2px 6px;
+  }
+}
+
 .card {
   border-radius: 0.5rem;
   transition: transform 0.2s, box-shadow 0.2s;
