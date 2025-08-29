@@ -25,7 +25,7 @@ defineProps<{
           <span v-if="notification.read && !notification.isGlobal"
                 class="badge rounded-pill bg-secondary d-inline-flex align-items-center">
             <i class="bi bi-envelope-open me-1"></i> Đã đọc </span>
-          <span v-if-else="!notification.read && !notification.isGlobal"
+          <span v-else-if="!notification.read && !notification.isGlobal"
                 class="badge rounded-pill bg-danger d-inline-flex align-items-center">
             <i class="bi bi-envelope-fill me-1"></i> Chưa đọc </span>
         </div>
