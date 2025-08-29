@@ -108,12 +108,11 @@ const submitReport = async () => {
 </script>
 <template>
   <div class="card mb-2 p-3">
-    <!-- Nội dung answer -->
     <!-- Header của answer -->
-    <div class="mb-2">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start mb-2">
       <!-- Nội dung -->
-      <div class="mb-2"
-           style="white-space: pre-line;">
+      <div class="flex-grow-1 me-3"
+           style="white-space: pre-line; margin-bottom:0;">
         <template v-if="!isEditing">{{ editedContent }}</template>
         <template v-else>
           <textarea v-model="editedContent"
@@ -127,12 +126,12 @@ const submitReport = async () => {
                     @click="cancelEdit">Hủy</button>
           </div>
         </template>
+        <!-- Người đăng -->
+        <small class="text-muted d-block mt-2"> Bởi {{ answer.user.name }} — {{ new
+          Date(answer.created_at).toLocaleString() }} </small>
       </div>
-      <!-- Người đăng -->
-      <small class="text-muted d-block mb-2"> Bởi {{ answer.user.name }} — {{ new
-        Date(answer.created_at).toLocaleString() }} </small>
       <!-- Các nút hành động -->
-      <div class="d-flex flex-wrap gap-2">
+      <div class="d-flex gap-2 mt-2 mt-sm-0">
         <button v-if="canEdit && !isEditing"
                 class="btn btn-sm btn-outline-primary"
                 @click="startEdit">Sửa</button>
@@ -221,6 +220,10 @@ const submitReport = async () => {
   .card .btn {
     font-size: 0.8rem;
     padding: 2px 6px;
+  }
+
+  .card small.text-muted {
+    font-size: 0.75rem;
   }
 }
 
