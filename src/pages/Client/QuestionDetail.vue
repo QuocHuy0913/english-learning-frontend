@@ -3,19 +3,20 @@
 
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AnswerCard from '../components/AnswerCard.vue';
 import {
   fetchQuestion,
   deleteQuestion,
   type Question,
-} from '../api/questions';
+} from '../../api/questions';
 import {
   fetchAnswersByQuestion,
   createAnswer,
   type Answer,
   deleteAnswer,
-} from '../api/answers';
-import { useAuthStore } from '../stores/auth';
+} from '../../api/answers';
+import { useAuthStore } from '../../stores/auth';
+import { createReport } from '@/api/reports';
+import AnswerCard from '@/components/AnswerCard.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -29,6 +30,11 @@ const answerContent = ref('');
 const error = ref('');
 const deleteError = ref('');
 const successMessage = ref('');
+
+const showReportModal = ref(false)
+const reportReason = ref('')
+const reportError = ref('')
+const reportSuccess = ref('')
 
 async function loadData() {
   loading.value = true;
@@ -88,7 +94,6 @@ async function onDelete() {
   }
 }
 
-// Hàm xử lý xóa answer nhận answerId
 async function handleDeleteAnswer(answerId: number) {
   try {
     await deleteAnswer(answerId);
@@ -96,6 +101,34 @@ async function handleDeleteAnswer(answerId: number) {
     answers.value = res.data;
   } catch {
     alert('Xóa câu trả lời thất bại!');
+  }
+}
+
+function onReport() {
+  if (!authStore.accessToken) {
+    alert('Bạn phải đăng nhập để thực hiện báo cáo!')
+    return
+  }
+  reportReason.value = ''
+  reportError.value = ''
+  reportSuccess.value = ''
+  showReportModal.value = true
+}
+
+async function submitReport() {
+  if (!reportReason.value.trim()) {
+    reportError.value = 'Vui lòng nhập lý do báo cáo'
+    return
+  }
+  try {
+    await createReport('question', questionId, reportReason.value)
+    reportSuccess.value = 'Báo cáo thành công!'
+    reportError.value = ''
+    setTimeout(() => {
+      showReportModal.value = false
+    }, 1500)
+  } catch {
+    reportError.value = 'Gửi báo cáo thất bại!'
   }
 }
 
@@ -117,16 +150,23 @@ onMounted(loadData);
     <div v-else-if="question"
          class="card shadow-sm mb-4 border-success border-2">
       <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="card-title fw-bold mb-0">{{ question.title }}</h3>
+        <div class="d-flex justify-content-between mb-2">
+          <h3 class="card-title fw-bold me-2">{{ question.title }}</h3>
           <div v-if="authStore.user?.id === question.user.id"
-               class="d-flex flex-column flex-md-row gap-2">
-            <button class="btn btn-success d-flex align-items-center"
-                    @click="onUpdate">
-              <i class="bi bi-pencil-square me-1"></i> Sửa </button>
-            <button class="btn btn-danger d-flex align-items-center"
-                    @click="onDelete">
-              <i class="bi bi-trash me-1"></i> Xóa </button>
+               class="flex-column flex-md-row gap-2">
+            <div class="d-flex gap-2">
+              <button class="btn btn-success d-flex align-items-center"
+                      @click="onUpdate">
+                <i class="bi bi-pencil-square me-1"></i> Sửa </button>
+              <button class="btn btn-danger d-flex align-items-center"
+                      @click="onDelete">
+                <i class="bi bi-trash me-1"></i> Xóa </button>
+            </div>
+            <div class="mt-2 m-0">
+              <button class="btn btn-outline-danger d-flex align-items-center"
+                      @click="onReport">
+                <i class="bi bi-flag me-1"></i> Báo cáo </button>
+            </div>
           </div>
         </div>
         <div class="text-muted mb-3">
@@ -134,10 +174,10 @@ onMounted(loadData);
         </div>
         <div class="mb-4">
           <span v-for="tag in question.tags"
-                :key="tag"
+                :key="tag.id"
                 class="badge bg-success text-white me-2"
                 style="cursor: pointer;"
-                @click="onTagClick(tag)">{{ tag }}</span>
+                @click="onTagClick(tag.name)">{{ tag.name }}</span>
         </div>
         <div class="mb-4"
              style="white-space: pre-line; font-size: 1.1rem;"> {{ question.content }} </div>
@@ -175,6 +215,38 @@ onMounted(loadData);
     <div v-else
          class="text-center text-muted my-4">
       <em>Vui lòng đăng nhập để đăng câu trả lời.</em>
+    </div>
+  </div>
+  <!-- Modal Report -->
+  <div class="modal fade show"
+       tabindex="-1"
+       style="display: block; background: rgba(0,0,0,0.5);"
+       v-if="showReportModal">
+    <div class="modal-dialog">
+      <div class="modal-content border-danger">
+        <div class="modal-header">
+          <h5 class="modal-title">Báo cáo câu hỏi</h5>
+          <button type="button"
+                  class="btn-close"
+                  @click="showReportModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <textarea class="form-control"
+                    rows="4"
+                    v-model="reportReason"
+                    placeholder="Nhập lý do báo cáo..."></textarea>
+          <div v-if="reportError"
+               class="text-danger mt-2">{{ reportError }}</div>
+          <div v-if="reportSuccess"
+               class="text-success mt-2">{{ reportSuccess }}</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary"
+                  @click="showReportModal = false">Hủy</button>
+          <button class="btn btn-danger"
+                  @click="submitReport">Gửi báo cáo</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

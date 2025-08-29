@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { login } from '../api/auth';
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '../../stores/auth';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -11,16 +10,18 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 const showPassword = ref(false);
+const loading = ref(false);
 
 async function submit() {
   error.value = '';
+  loading.value = true;
   try {
-    const res = await login({ email: email.value, password: password.value });
-    authStore.setTokens(res.data.accessToken, res.data.refreshToken);
-    authStore.setUser(res.data.user);
+    await authStore.login(email.value, password.value);
     router.push({ name: 'Home' });
   } catch {
     error.value = 'Email hoặc mật khẩu không hợp lệ';
+  } finally {
+    loading.value = false;
   }
 }
 
@@ -29,7 +30,7 @@ function goToRegister() {
 }
 </script>
 <template>
-  <div class="bg-success bg-opacity-10 min-vh-100 d-flex align-items-center">
+  <div class="bg-success bg-opacity-10 min-vh-100 d-flex align-items-center p-5">
     <div class="container"
          style="max-width: 600px;">
       <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
@@ -67,7 +68,11 @@ function goToRegister() {
           <div class="text-danger mb-3"
                v-if="error">{{ error }}</div>
           <button type="submit"
-                  class="btn btn-success w-100 rounded-pill fw-semibold p-2 mt-3">Đăng nhập</button>
+                  class="btn btn-success w-100 rounded-pill fw-semibold p-2 mt-3"
+                  :disabled="loading">
+            <span v-if="loading">Đang đăng nhập...</span>
+            <span v-else>Đăng nhập</span>
+          </button>
         </form>
         <div class="text-center m-2">
           <small class="text-muted m-0">Chưa có tài khoản?</small>

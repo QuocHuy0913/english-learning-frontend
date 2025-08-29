@@ -18,6 +18,8 @@ export interface TokensResponse {
     id: number;
     name: string;
     email: string;
+    role: 'user' | 'admin';
+    status: 'active' | 'banned';
   };
 }
 
@@ -29,7 +31,7 @@ export async function login(payload: LoginPayload) {
   return await api.post<TokensResponse>('/auth/login', payload);
 }
 
-export async function refreshToken(refreshToken: string) {
+export async function refreshTokens(refreshToken: string) {
   return await api.post<TokensResponse>('/auth/refresh', { refreshToken });
 }
 

@@ -15,7 +15,6 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Xử lý refresh token khi access token hết hạn
 api.interceptors.response.use(
   (response) => response,
   async (error) => {

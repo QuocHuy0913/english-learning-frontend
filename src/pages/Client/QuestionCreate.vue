@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { createQuestion } from '../api/questions';
+import { createQuestion } from '../../api/questions';
 import { getAiSuggestion } from '@/api/ai';
 import { debounce } from 'lodash';
 
@@ -86,7 +86,7 @@ async function submit() {
 }
 </style>
 <template>
-  <div class="container mt-5 p-4 rounded bg-light shadow border-1 border-primary"
+  <div class="container mt-5 p-4 rounded bg-light shadow border border-success"
        style="max-width: 720px;">
     <h3 class="text-success fw-bold mb-4 text-center">Tạo câu hỏi mới</h3>
     <form @submit.prevent="submit"

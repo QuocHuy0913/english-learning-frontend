@@ -1,12 +1,15 @@
-import HomeView from '@/pages/HomeView.vue'
-import LoginView from '@/pages/LoginView.vue'
-import QuestionCreate from '@/pages/QuestionCreate.vue'
-import QuestionDetail from '@/pages/QuestionDetail.vue'
-import QuestionEdit from '@/pages/QuestionEdit.vue'
-import RegisterView from '@/pages/RegisterView.vue'
-import UserQuestion from '@/pages/UserQuestion.vue'
+import AdminDashBoard from '@/pages/Admin/AdminDashBoard.vue'
+import ErrorView from '@/pages/Error/ErrorView.vue'
+import HomeView from '@/pages/Client/HomeView.vue'
+import LoginView from '@/pages/Client/LoginView.vue'
+import QuestionCreate from '@/pages/Client/QuestionCreate.vue'
+import QuestionDetail from '@/pages/Client/QuestionDetail.vue'
+import QuestionEdit from '@/pages/Client/QuestionEdit.vue'
+import RegisterView from '@/pages/Client/RegisterView.vue'
+import UserQuestion from '@/pages/Client/UserQuestion.vue'
 import { useAuthStore } from '@/stores/auth'
 import { createRouter, createWebHistory } from 'vue-router'
+import NotificationView from '@/pages/Client/NotificationView.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
@@ -31,20 +34,53 @@ const routes = [
     component: UserQuestion,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/notifications',
+    name: 'Notifications',
+    component: NotificationView,
+    meta: { requiresAuth: true },
+  },
 ]
+
+const adminRoutes = [
+  {
+    path: '/admin/dashboard',
+    name: 'AdminDashboard',
+    component: AdminDashBoard,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+]
+
+const errorRoutes = {
+  path: '/error',
+  name: 'ErrorPage',
+  component: ErrorView,
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...routes],
+  routes: [...routes, ...adminRoutes, errorRoutes],
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  if (to.meta.requiresAuth && !authStore.accessToken) {
-    next({ name: 'Login' })
-  } else {
-    next()
+  // check requiresAuth
+  if (!authStore.user && localStorage.getItem('user')) {
+    await authStore.loadFromStorage()
   }
+
+  // check requiresAuth
+  if (to.meta.requiresAuth && !authStore.accessToken) {
+    return next({ name: 'Login' })
+  }
+
+  // check requiresAdmin
+  if (to.meta.requiresAdmin) {
+    if (!authStore.user || authStore.user.role !== 'admin') {
+      return next({ name: 'ErrorPage' }) // chặn user thường
+    }
+  }
+  next()
 })
 
 export default router

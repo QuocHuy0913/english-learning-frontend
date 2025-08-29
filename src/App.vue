@@ -1,6 +1,13 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import NavBar from './components/NavBar.vue';
+import { useNotificationStore } from './stores/notificationStore';
 
+const notificationStore = useNotificationStore()
+
+onMounted(() => {
+  notificationStore.loadAll()
+})
 </script>
 <template>
   <div class="app-container">

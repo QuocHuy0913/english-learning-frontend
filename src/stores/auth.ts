@@ -1,16 +1,38 @@
+import { fetchProfile, login, refreshTokens } from '@/api/auth'
+import { decodeJwt } from 'jose'
 import { defineStore } from 'pinia'
 
 interface User {
   id: number
   name: string
   email: string
+  role: 'user' | 'admin'
+  status: 'active' | 'banned'
+}
+
+interface AuthState {
+  user: User | null
+  accessToken: string | null
+  refreshToken: string | null
+}
+
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload: Record<string, unknown> = decodeJwt(token)
+    const now = Math.floor(Date.now() / 1000)
+    const exp = typeof payload.exp === 'number' ? payload.exp : Number(payload.exp)
+    return exp < now
+  } catch {
+    return true
+  }
 }
 
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
+  state: (): AuthState & { isAuthChecking: boolean } => ({
     user: null as User | null,
     accessToken: '',
     refreshToken: '',
+    isAuthChecking: false,
   }),
   actions: {
     setTokens(accessToken: string, refreshToken: string) {
@@ -23,6 +45,10 @@ export const useAuthStore = defineStore('auth', {
       this.user = user
       localStorage.setItem('user', JSON.stringify(user))
     },
+    async fetchProfile() {
+      const { data } = await fetchProfile()
+      this.setUser(data)
+    },
     logout() {
       this.user = null
       this.accessToken = ''
@@ -31,12 +57,54 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('user')
     },
-    loadFromStorage() {
-      this.accessToken = localStorage.getItem('accessToken') || ''
-      this.refreshToken = localStorage.getItem('refreshToken') || ''
-      const userStr = localStorage.getItem('user')
-      if (userStr) {
-        this.user = JSON.parse(userStr)
+
+    async login(email: string, password: string) {
+      const { data } = await login({ email, password })
+      this.setTokens(data.accessToken, data.refreshToken)
+      this.setUser(data.user)
+    },
+
+    async checkAndRefreshToken(): Promise<boolean> {
+      if (!this.accessToken || !this.refreshToken) {
+        return false
+      }
+
+      // Access token còn hạn
+      if (!isTokenExpired(this.accessToken)) {
+        return true
+      }
+
+      // Hết hạn => thử refresh
+      try {
+        const { data } = await refreshTokens(this.refreshToken)
+        this.setTokens(data.accessToken, data.refreshToken)
+        return true
+      } catch {
+        return false
+      }
+    },
+
+    async loadFromStorage() {
+      this.isAuthChecking = true
+      try {
+        const accessToken = localStorage.getItem('accessToken')
+        const refreshToken = localStorage.getItem('refreshToken')
+        const userStr = localStorage.getItem('user')
+
+        if (accessToken) this.accessToken = accessToken
+        if (refreshToken) this.refreshToken = refreshToken
+        if (userStr) this.user = JSON.parse(userStr)
+
+        const valid = await this.checkAndRefreshToken()
+        if (!valid) {
+          this.logout()
+          return
+        }
+        await this.fetchProfile()
+      } catch {
+        this.logout()
+      } finally {
+        this.isAuthChecking = false
       }
     },
   },

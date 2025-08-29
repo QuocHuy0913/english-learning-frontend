@@ -8,6 +8,16 @@ export interface Answer {
   updated_at: string
   like_count?: number
   liked_by_current_user?: boolean
+  replies?: Answer[]
+}
+
+export interface AnswerWithQuestion extends Answer {
+  question: { id: number; title: string } | null
+}
+
+export interface PaginatedAnswers {
+  items: AnswerWithQuestion[]
+  total: number
 }
 
 export interface ReplyCreatePayload {

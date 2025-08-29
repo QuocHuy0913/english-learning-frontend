@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 import { createReply, likeAnswer, unlikeAnswer, updateAnswer, type Answer } from '@/api/answers';
+import { createReport } from '@/api/reports';
 
 interface User { id: number; name: string }
 
@@ -27,6 +28,11 @@ const replyContent = ref('');
 const submittingReply = ref(false);
 
 const canEdit = computed(() => props.currentUser?.id === props.answer.user.id);
+
+const showReportModal = ref(false)
+const reportReason = ref('')
+const reportError = ref('')
+const reportSuccess = ref('')
 
 // ===== Functions =====
 
@@ -71,6 +77,34 @@ const submitReply = async () => {
 };
 
 const removeChildReply = (id: number) => replies.value = replies.value.filter(r => r.id !== id);
+
+const onReport = () => {
+  if (!props.currentUser) {
+    alert('Bạn phải đăng nhập để báo cáo câu trả lời!')
+    return
+  }
+  reportReason.value = ''
+  reportError.value = ''
+  reportSuccess.value = ''
+  showReportModal.value = true
+}
+
+const submitReport = async () => {
+  if (!reportReason.value.trim()) {
+    reportError.value = 'Vui lòng nhập lý do báo cáo'
+    return
+  }
+  try {
+    await createReport('answer', props.answer.id, reportReason.value)
+    reportSuccess.value = 'Báo cáo thành công!'
+    reportError.value = ''
+    setTimeout(() => {
+      showReportModal.value = false
+    }, 1500)
+  } catch {
+    reportError.value = 'Gửi báo cáo thất bại!'
+  }
+}
 </script>
 <template>
   <div class="card mb-2 p-3">
@@ -98,6 +132,11 @@ const removeChildReply = (id: number) => replies.value = replies.value.filter(r 
                 @click="startEdit">Sửa</button>
         <button class="btn btn-sm btn-outline-danger"
                 @click="deleteAnswer">Xóa</button>
+      </div>
+      <div v-if="currentUser" class="ms-2">
+        <button class="btn btn-sm btn-outline-danger"
+                @click="onReport">
+          <i class="bi bi-flag"></i> Báo cáo </button>
       </div>
     </div>
     <!-- Like -->
@@ -136,6 +175,37 @@ const removeChildReply = (id: number) => replies.value = replies.value.filter(r 
                   :current-user="currentUser"
                   @edit="$emit('edit', $event)"
                   @delete="removeChildReply($event)" />
+    </div>
+  </div>
+  <div class="modal fade show"
+       tabindex="-1"
+       style="display: block; background: rgba(0,0,0,0.5);"
+       v-if="showReportModal">
+    <div class="modal-dialog">
+      <div class="modal-content border-0">
+        <div class="modal-header">
+          <h5 class="modal-title">Báo cáo câu trả lời</h5>
+          <button type="button"
+                  class="btn-close"
+                  @click="showReportModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <textarea v-model="reportReason"
+                    rows="3"
+                    class="form-control"
+                    placeholder="Nhập lý do báo cáo..."></textarea>
+          <div v-if="reportError"
+               class="text-danger mt-2">{{ reportError }}</div>
+          <div v-if="reportSuccess"
+               class="text-success mt-2">{{ reportSuccess }}</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary"
+                  @click="showReportModal = false">Hủy</button>
+          <button class="btn btn-danger"
+                  @click="submitReport">Gửi báo cáo</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

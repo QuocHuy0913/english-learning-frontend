@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { fetchQuestion, updateQuestion } from '../api/questions';
+import { fetchQuestion, updateQuestion } from '../../api/questions';
 
 const router = useRouter();
 const route = useRoute();

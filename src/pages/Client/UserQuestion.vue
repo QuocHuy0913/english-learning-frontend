@@ -3,9 +3,8 @@
 // eslint-disable @typescript-eslint/no-explicit-any
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { fetchMyQuestions, deleteQuestion, type Question } from '../api/questions';
-import QuestionCard from '../components/QuestionCard.vue';
-
+import { fetchMyQuestions, deleteQuestion, type Question } from '../../api/questions';
+import QuestionCard from '@/components/QuestionCard.vue';
 const router = useRouter();
 
 const questions = ref<Question[]>([]);
