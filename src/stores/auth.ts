@@ -64,6 +64,8 @@ export const useAuthStore = defineStore('auth', {
       const { data } = await login({ email, password })
       this.setTokens(data.accessToken, data.refreshToken)
       this.setUser(data.user)
+      const notificationStore = useNotificationStore()
+      await notificationStore.loadAll()
     },
 
     async checkAndRefreshToken(): Promise<boolean> {
@@ -103,6 +105,8 @@ export const useAuthStore = defineStore('auth', {
           return
         }
         await this.fetchProfile()
+        const notificationStore = useNotificationStore()
+        await notificationStore.loadAll()
       } catch {
         this.logout()
       } finally {
