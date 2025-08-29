@@ -101,7 +101,7 @@ const searchUsers = async () => {
     searchResults.value = []
     return
   }
-  const res = await api.listUsers(1, 10, userSearch.value) // backend cần hỗ trợ search
+  const res = await api.listUsers(1, 10, undefined, userSearch.value)
   searchResults.value = res.items
 }
 
