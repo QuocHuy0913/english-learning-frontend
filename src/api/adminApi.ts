@@ -17,8 +17,8 @@ export const useAdminApi = () => ({
   // ================= User =================
   countUsers: () => api.get<number>('/admin/users/count').then((res) => res.data),
 
-  listUsers: (page = 1, limit = 10, status?: string) =>
-    api.get(`/admin/users`, { params: { page, limit, status } }).then((res) => res.data),
+  listUsers: (page = 1, limit = 10, status?: string, search?: string) =>
+    api.get(`/admin/users`, { params: { page, limit, status, search } }).then((res) => res.data),
 
   findUserByEmail: (email: string) =>
     api.post('/admin/users/email', { email }).then((res) => res.data),
