@@ -28,10 +28,8 @@ const toggleLike = async (e: Event) => {
 watch(
   () => props.question,
   (newQ) => {
-    if (newQ) {
-      likesCount.value = newQ.likesCount;
-      liked.value = newQ.liked ?? false;
-    }
+    likesCount.value = newQ.likesCount ?? 0;
+    liked.value = newQ.liked ?? false;
   },
   { immediate: true }
 );
