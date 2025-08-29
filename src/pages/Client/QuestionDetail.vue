@@ -152,9 +152,10 @@ onMounted(loadData);
       <div class="card-body">
         <div class="d-flex justify-content-between mb-2">
           <h3 class="card-title fw-bold me-2">{{ question.title }}</h3>
-          <div v-if="authStore.user?.id === question.user.id"
-               class="flex-column flex-md-row gap-2">
-            <div class="d-flex gap-2">
+          <div class="flex-column flex-md-row gap-2">
+            <!-- Nút Sửa/Xóa: chỉ cho chính chủ -->
+            <div v-if="authStore.user?.id === question.user.id"
+                 class="d-flex gap-2">
               <button class="btn btn-success d-flex align-items-center"
                       @click="onUpdate">
                 <i class="bi bi-pencil-square me-1"></i> Sửa </button>
@@ -162,7 +163,9 @@ onMounted(loadData);
                       @click="onDelete">
                 <i class="bi bi-trash me-1"></i> Xóa </button>
             </div>
-            <div class="mt-2 m-0">
+            <!-- Nút Báo cáo: chỉ cần đăng nhập -->
+            <div v-if="authStore.accessToken"
+                 class="mt-2 m-0">
               <button class="btn btn-outline-danger d-flex align-items-center"
                       @click="onReport">
                 <i class="bi bi-flag me-1"></i> Báo cáo </button>
