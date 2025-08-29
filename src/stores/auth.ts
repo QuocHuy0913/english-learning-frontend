@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('user')
       const notificationStore = useNotificationStore()
-      notificationStore.$reset()
+      notificationStore.reset()
     },
 
     async login(email: string, password: string) {
