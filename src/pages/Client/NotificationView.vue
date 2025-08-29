@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { fetchNotifications, markAllNotificationsRead, markNotificationRead, type Notification } from '@/api/notifications'
+import { fetchNotifications, markNotificationRead, type Notification } from '@/api/notifications'
 import { ref, onMounted } from 'vue'
 
 const filter = ref<'all' | 'unread' | 'personal' | 'global'>('all')
@@ -29,14 +29,6 @@ async function onMarkRead(id: number) {
   unreadCount.value = notifications.value.filter(n => !n.read && !n.isGlobal).length
 }
 
-async function onMarkAllRead() {
-  await markAllNotificationsRead()
-  notifications.value = notifications.value.map(n =>
-    n.isGlobal ? n : { ...n, read: true }
-  )
-  unreadCount.value = 0
-}
-
 onMounted(loadNotifications)
 </script>
 <template>
@@ -49,10 +41,6 @@ onMounted(loadNotifications)
         </h3>
         <small class="text-muted">Luôn cập nhật với những thông báo mới nhất</small>
       </div>
-      <button class="btn btn-outline-success btn-sm"
-              @click="onMarkAllRead"
-              :disabled="unreadCount === 0">
-        <i class="bi bi-check2-all me-1"></i> Đánh dấu tất cả đã đọc </button>
     </div>
     <!-- Counters -->
     <div class="d-flex gap-3 mb-3">
