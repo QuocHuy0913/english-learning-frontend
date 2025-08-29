@@ -7,6 +7,7 @@ import {
   fetchQuestion,
   deleteQuestion,
   type Question,
+  toggleLikeQuestion,
 } from '../../api/questions';
 import {
   fetchAnswersByQuestion,
@@ -36,6 +37,9 @@ const reportReason = ref('')
 const reportError = ref('')
 const reportSuccess = ref('')
 
+const likesCount = ref<number>(0)
+const liked = ref<boolean>(false)
+
 async function loadData() {
   loading.value = true;
   try {
@@ -45,6 +49,8 @@ async function loadData() {
     ]);
     question.value = qRes.data;
     answers.value = aRes.data;
+    likesCount.value = qRes.data.likesCount
+    liked.value = qRes.data.liked
   } catch {
     router.push({ name: 'Home' });
   } finally {
@@ -132,6 +138,20 @@ async function submitReport() {
   }
 }
 
+async function handleToggleLike() {
+  if (!authStore.accessToken) {
+    alert('Bạn phải đăng nhập để thích câu hỏi!')
+    return
+  }
+  try {
+    const res = await toggleLikeQuestion(questionId)
+    likesCount.value = res.data.likesCount
+    liked.value = res.data.liked
+  } catch (err) {
+    console.error('Toggle like error:', err)
+  }
+}
+
 onMounted(loadData);
 </script>
 <template>
@@ -188,6 +208,14 @@ onMounted(loadData);
           </div>
           <div class="mb-4"
                style="white-space: pre-line; font-size: 1.1rem;"> {{ question.content }} </div>
+          <div class="d-flex align-items-center gap-3 mt-3">
+            <button class="btn btn-outline-success d-flex align-items-center gap-1"
+                    @click="handleToggleLike">
+              <i class="bi"
+                 :class="liked ? 'bi-hand-thumbs-up-fill text-success' : 'bi-hand-thumbs-up'"></i>
+              <span>{{ likesCount }} Thích</span>
+            </button>
+          </div>
           <div v-if="deleteError"
                class="alert alert-danger">{{ deleteError }}</div>
         </div>
