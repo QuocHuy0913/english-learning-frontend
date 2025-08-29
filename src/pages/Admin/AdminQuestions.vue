@@ -3,6 +3,7 @@ import { useAdminApi } from "@/api/adminApi"
 import { fetchAnswersByQuestion } from "@/api/answers"
 import { fetchQuestions, type Question } from "@/api/questions"
 import { ref, onMounted, computed } from "vue"
+import { useRouter } from "vue-router"
 
 const questions = ref<Question[]>([])
 const answersCountMap = ref<Record<number, number>>({})
@@ -10,11 +11,16 @@ const page = ref(1)
 const limit = ref(10)
 const total = ref(0)
 const loading = ref(false)
+const router = useRouter();
 
 const totalQuestions = ref(0);
 const totalPages = computed(() => Math.ceil(totalQuestions.value / limit.value));
 
 const adminApi = useAdminApi()
+
+function onSelectQuestion(id: number) {
+  router.push({ name: 'QuestionDetail', params: { id } })
+}
 
 async function loadQuestions() {
   loading.value = true
@@ -96,8 +102,8 @@ onMounted(() => {
           </td>
           <td class="text-center align-items-center"> {{ new Date(q.created_at).toLocaleDateString() }} <div
                  class="d-flex justify-content-center align-items-center">
-              <a :href="`/questions/${q.id}`"
-                 class="btn p-0 bi bi-eye fs-5"></a>
+              <i class="btn p-0 bi bi-eye fs-5"
+                 @click="onSelectQuestion(q.id)"></i>
             </div>
           </td>
           <td class="text-center">
