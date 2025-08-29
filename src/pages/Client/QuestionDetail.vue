@@ -136,7 +136,7 @@ onMounted(loadData);
 </script>
 <template>
   <div class="row">
-    <div class="container mt-4"
+    <div class="container mt-4 px-3"
          style="max-width: 720px;">
       <button class="btn btn-outline-success mb-3 fw-semibold"
               @click="router.back()">
