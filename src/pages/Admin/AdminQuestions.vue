@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { useAdminApi } from "@/api/adminApi"
 import { fetchAnswersByQuestion } from "@/api/answers"
-import { deleteQuestion, fetchQuestions, type Question } from "@/api/questions"
+import { fetchQuestions, type Question } from "@/api/questions"
 import { ref, onMounted, computed } from "vue"
 
 const questions = ref<Question[]>([])
@@ -12,6 +13,8 @@ const loading = ref(false)
 
 const totalQuestions = ref(0);
 const totalPages = computed(() => Math.ceil(totalQuestions.value / limit.value));
+
+const adminApi = useAdminApi()
 
 async function loadQuestions() {
   loading.value = true
@@ -37,7 +40,7 @@ async function loadQuestions() {
 
 async function handleDelete(id: number) {
   if (!confirm("Bạn có chắc muốn xóa câu hỏi này?")) return
-  await deleteQuestion(id)
+  await adminApi.deleteQuestion(id)
   await loadQuestions()
 }
 
