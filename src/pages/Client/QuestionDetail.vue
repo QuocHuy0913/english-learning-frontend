@@ -135,122 +135,124 @@ async function submitReport() {
 onMounted(loadData);
 </script>
 <template>
-  <div class="container m-4 p-2 align-items-center justify-content-center"
-       style="max-width: 720px;">
-    <button class="btn btn-outline-success mb-3 fw-semibold"
-            @click="router.back()">
-      <i class="bi bi-arrow-left me-1"></i> Quay lại </button>
-    <div v-if="loading"
-         class="text-center my-5">
-      <div class="spinner-border text-success"
-           role="status">
-        <span class="visually-hidden">Đang tải...</span>
+  <div class="row">
+    <div class="container mt-4"
+         style="max-width: 720px;">
+      <button class="btn btn-outline-success mb-3 fw-semibold"
+              @click="router.back()">
+        <i class="bi bi-arrow-left me-1"></i> Quay lại </button>
+      <div v-if="loading"
+           class="text-center my-5">
+        <div class="spinner-border text-success"
+             role="status">
+          <span class="visually-hidden">Đang tải...</span>
+        </div>
       </div>
-    </div>
-    <div v-else-if="question"
-         class="card shadow-sm mb-4 border-success border-2">
-      <div class="card-body">
-        <div class="d-flex justify-content-between mb-2">
-          <h3 class="card-title fw-bold me-3">{{ question.title }}</h3>
-          <div class="flex-column flex-md-row gap-2">
-            <!-- Nút Sửa/Xóa: chỉ cho chính chủ -->
-            <div v-if="authStore.user?.id === question.user.id"
-                 class="d-flex gap-2">
-              <button class="btn btn-success d-flex align-items-center"
-                      @click="onUpdate">
-                <i class="bi bi-pencil-square me-1"></i> Sửa </button>
-              <button class="btn btn-danger d-flex align-items-center"
-                      @click="onDelete">
-                <i class="bi bi-trash me-1"></i> Xóa </button>
-            </div>
-            <!-- Nút Báo cáo: chỉ cần đăng nhập -->
-            <div v-if="authStore.accessToken"
-                 class="me-0">
-              <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2"
-                      style="white-space: nowrap;"
-                      @click="onReport">
-                <i class="bi bi-flag"></i>
-                <span>Báo cáo</span>
-              </button>
+      <div v-else-if="question"
+           class="card shadow-sm mb-4 border-success border-2">
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <h3 class="card-title fw-bold me-3">{{ question.title }}</h3>
+            <div class="flex-column flex-md-row gap-2">
+              <!-- Nút Sửa/Xóa: chỉ cho chính chủ -->
+              <div v-if="authStore.user?.id === question.user.id"
+                   class="d-flex gap-2">
+                <button class="btn btn-success d-flex align-items-center"
+                        @click="onUpdate">
+                  <i class="bi bi-pencil-square me-1"></i> Sửa </button>
+                <button class="btn btn-danger d-flex align-items-center"
+                        @click="onDelete">
+                  <i class="bi bi-trash me-1"></i> Xóa </button>
+              </div>
+              <!-- Nút Báo cáo: chỉ cần đăng nhập -->
+              <div v-if="authStore.accessToken"
+                   class="me-0">
+                <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2"
+                        style="white-space: nowrap;"
+                        @click="onReport">
+                  <i class="bi bi-flag"></i>
+                  <span>Báo cáo</span>
+                </button>
+              </div>
             </div>
           </div>
+          <div class="text-muted mb-3">
+            <small>Người đăng: {{ question.user.name }} — {{ new Date(question.created_at).toLocaleString() }}</small>
+          </div>
+          <div class="mb-4">
+            <span v-for="tag in question.tags"
+                  :key="tag.id"
+                  class="badge bg-success text-white me-2"
+                  style="cursor: pointer;"
+                  @click="onTagClick(tag.name)">{{ tag.name }}</span>
+          </div>
+          <div class="mb-4"
+               style="white-space: pre-line; font-size: 1.1rem;"> {{ question.content }} </div>
+          <div v-if="deleteError"
+               class="alert alert-danger">{{ deleteError }}</div>
         </div>
-        <div class="text-muted mb-3">
-          <small>Người đăng: {{ question.user.name }} — {{ new Date(question.created_at).toLocaleString() }}</small>
+      </div>
+      <!-- phần answers -->
+      <div v-if="question"
+           class="mb-4">
+        <h5 class="fw-bold mb-3">Các câu trả lời ({{ answers.length }})</h5>
+        <div v-if="answers.length === 0"
+             class="alert alert-secondary">Chưa có câu trả lời nào.</div>
+        <div>
+          <AnswerCard v-for="ans in answers"
+                      :key="ans.id"
+                      :answer="ans"
+                      :currentUser="authStore.user"
+                      @delete="handleDeleteAnswer" />
         </div>
-        <div class="mb-4">
-          <span v-for="tag in question.tags"
-                :key="tag.id"
-                class="badge bg-success text-white me-2"
-                style="cursor: pointer;"
-                @click="onTagClick(tag.name)">{{ tag.name }}</span>
-        </div>
-        <div class="mb-4"
-             style="white-space: pre-line; font-size: 1.1rem;"> {{ question.content }} </div>
-        <div v-if="deleteError"
-             class="alert alert-danger">{{ deleteError }}</div>
+      </div>
+      <!-- form post answer -->
+      <div v-if="authStore.accessToken"
+           class="card p-3 mb-5 border-success border-2 shadow-sm">
+        <h6 class="fw-bold mb-3">Câu trả lời của bạn</h6>
+        <textarea class="form-control"
+                  rows="5"
+                  v-model="answerContent"
+                  placeholder="Viết câu trả lời tại đây"></textarea>
+        <div class="text-danger mt-2"
+             v-if="error">{{ error }}</div>
+        <button class="btn btn-success mt-3 px-4 fw-semibold"
+                @click="submitAnswer">Đăng câu trả lời</button>
+      </div>
+      <div v-else
+           class="text-center text-muted my-4">
+        <em>Vui lòng đăng nhập để đăng câu trả lời.</em>
       </div>
     </div>
-    <!-- phần answers -->
-    <div v-if="question"
-         class="mb-4">
-      <h5 class="fw-bold mb-3">Các câu trả lời ({{ answers.length }})</h5>
-      <div v-if="answers.length === 0"
-           class="alert alert-secondary">Chưa có câu trả lời nào.</div>
-      <div>
-        <AnswerCard v-for="ans in answers"
-                    :key="ans.id"
-                    :answer="ans"
-                    :currentUser="authStore.user"
-                    @delete="handleDeleteAnswer" />
-      </div>
-    </div>
-    <!-- form post answer -->
-    <div v-if="authStore.accessToken"
-         class="card p-3 mb-5 border-success border-2 shadow-sm">
-      <h6 class="fw-bold mb-3">Câu trả lời của bạn</h6>
-      <textarea class="form-control"
-                rows="5"
-                v-model="answerContent"
-                placeholder="Viết câu trả lời tại đây"></textarea>
-      <div class="text-danger mt-2"
-           v-if="error">{{ error }}</div>
-      <button class="btn btn-success mt-3 px-4 fw-semibold"
-              @click="submitAnswer">Đăng câu trả lời</button>
-    </div>
-    <div v-else
-         class="text-center text-muted my-4">
-      <em>Vui lòng đăng nhập để đăng câu trả lời.</em>
-    </div>
-  </div>
-  <!-- Modal Report -->
-  <div class="modal fade show"
-       tabindex="-1"
-       style="display: block; background: rgba(0,0,0,0.5);"
-       v-if="showReportModal">
-    <div class="modal-dialog">
-      <div class="modal-content border-danger">
-        <div class="modal-header">
-          <h5 class="modal-title">Báo cáo câu hỏi</h5>
-          <button type="button"
-                  class="btn-close"
-                  @click="showReportModal = false"></button>
-        </div>
-        <div class="modal-body">
-          <textarea class="form-control"
-                    rows="4"
-                    v-model="reportReason"
-                    placeholder="Nhập lý do báo cáo..."></textarea>
-          <div v-if="reportError"
-               class="text-danger mt-2">{{ reportError }}</div>
-          <div v-if="reportSuccess"
-               class="text-success mt-2">{{ reportSuccess }}</div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary"
-                  @click="showReportModal = false">Hủy</button>
-          <button class="btn btn-danger"
-                  @click="submitReport">Gửi báo cáo</button>
+    <!-- Modal Report -->
+    <div class="modal fade show"
+         tabindex="-1"
+         style="display: block; background: rgba(0,0,0,0.5);"
+         v-if="showReportModal">
+      <div class="modal-dialog">
+        <div class="modal-content border-danger">
+          <div class="modal-header">
+            <h5 class="modal-title">Báo cáo câu hỏi</h5>
+            <button type="button"
+                    class="btn-close"
+                    @click="showReportModal = false"></button>
+          </div>
+          <div class="modal-body">
+            <textarea class="form-control"
+                      rows="4"
+                      v-model="reportReason"
+                      placeholder="Nhập lý do báo cáo..."></textarea>
+            <div v-if="reportError"
+                 class="text-danger mt-2">{{ reportError }}</div>
+            <div v-if="reportSuccess"
+                 class="text-success mt-2">{{ reportSuccess }}</div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary"
+                    @click="showReportModal = false">Hủy</button>
+            <button class="btn btn-danger"
+                    @click="submitReport">Gửi báo cáo</button>
+          </div>
         </div>
       </div>
     </div>
