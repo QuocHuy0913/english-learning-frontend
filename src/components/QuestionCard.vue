@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, onMounted, ref } from 'vue';
+import { defineProps, defineEmits, onMounted, ref, watch } from 'vue';
 import { fetchAnswersByQuestion } from '../api/answers';
 import { toggleLikeQuestion, type Question } from '../api/questions';
 
@@ -15,15 +15,26 @@ const onClick = () => {
 };
 
 const toggleLike = async (e: Event) => {
-  e.stopPropagation(); // tránh click vào card => mở detail
+  e.stopPropagation();
   try {
     const res = await toggleLikeQuestion(props.question.id);
-    likesCount.value = res.data.likesCount;
-    liked.value = res.data.liked; // backend trả về liked = true/false
+    likesCount.value = res.data.likesCount; // ✅ OK vì là ref
+    liked.value = res.data.liked;
   } catch (err) {
     console.error('Like error:', err);
   }
 };
+
+watch(
+  () => props.question,
+  (newQ) => {
+    if (newQ) {
+      likesCount.value = newQ.likesCount;
+      liked.value = newQ.liked ?? false;
+    }
+  },
+  { immediate: true }
+);
 
 onMounted(async () => {
   try {
