@@ -166,7 +166,8 @@ onMounted(loadData);
             <!-- Nút Báo cáo: chỉ cần đăng nhập -->
             <div v-if="authStore.accessToken"
                  class="me-0">
-              <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2 py-1"
+              <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2"
+                      style="white-space: nowrap;"
                       @click="onReport">
                 <i class="bi bi-flag"></i>
                 <span>Báo cáo</span>
