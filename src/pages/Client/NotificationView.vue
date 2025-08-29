@@ -58,6 +58,7 @@ onMounted(loadNotifications)
                 @click="filter = 'all'; loadNotifications()">
           <i class="bi bi-funnel me-1"></i>Tất cả ({{ total }}) </button>
       </li>
+      
       <li class="nav-item">
         <button class="btn"
                 :class="filter === 'unread' ? 'btn-success' : 'btn-outline-success'"
