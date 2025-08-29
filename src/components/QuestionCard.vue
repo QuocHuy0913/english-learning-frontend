@@ -1,35 +1,28 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, onMounted, ref } from 'vue';
 import { fetchAnswersByQuestion } from '../api/answers';
-
-interface User {
-  id: number;
-  name: string;
-}
-
-interface Tag {
-  id: number;
-  name: string;
-}
-
-interface Question {
-  id: number;
-  title: string;
-  content?: string;
-  tags?: Tag[];
-  user: User;
-  created_at: string;
-  likes?: number;
-  comments?: number;
-}
+import { toggleLikeQuestion, type Question } from '../api/questions';
 
 const props = defineProps<{ question: Question }>();
 const emit = defineEmits(['select']);
 
 const answersCount = ref<number>(0);
+const likesCount = ref<number>(props.question.likesCount ?? 0);
+const liked = ref<boolean>(props.question.liked ?? false);
 
 const onClick = () => {
   emit('select', props.question.id);
+};
+
+const toggleLike = async (e: Event) => {
+  e.stopPropagation(); // tránh click vào card => mở detail
+  try {
+    const res = await toggleLikeQuestion(props.question.id);
+    likesCount.value = res.data.likesCount;
+    liked.value = res.data.liked; // backend trả về liked = true/false
+  } catch (err) {
+    console.error('Like error:', err);
+  }
 };
 
 onMounted(async () => {
@@ -66,43 +59,16 @@ onMounted(async () => {
               class="badge text-dark fw-semibold border border-success-subtle me-2"> {{ tag.name }} </span>
       </div>
       <!-- Stats -->
-      <div class="d-flex gap-3 text-muted small">
-        <div><i class="bi bi-hand-thumbs-up me-1 text-success"></i>{{ question.likes ?? 0 }} thích</div>
+      <div class="d-flex gap-3 text-muted small align-items-center">
+        <div role="button"
+             class="d-flex align-items-center"
+             @click="toggleLike">
+          <i class="bi me-1"
+             :class="liked ? 'bi-hand-thumbs-up-fill text-success' : 'bi-hand-thumbs-up text-muted'"></i> {{ likesCount
+            }} thích
+        </div>
         <div><i class="bi bi-check2-circle me-1 text-success"></i>{{ answersCount }} trả lời</div>
       </div>
     </div>
   </div>
 </template>
-<style scoped>
-/* Chỉ giữ lại những gì Bootstrap không có */
-.question-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.question-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
-
-/* Avatar user */
-.avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #6b7280;
-  /* xám */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-
-/* Giới hạn nội dung 2 dòng */
-.excerpt {
-  display: -webkit-box;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-</style>

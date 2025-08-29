@@ -13,6 +13,8 @@ export interface Question {
   user: { id: number; name: string }
   created_at: string
   updated_at: string
+  likesCount: number
+  liked?: boolean
 }
 
 export interface QuestionCreatePayload {
@@ -47,4 +49,8 @@ export async function updateQuestion(id: number, payload: Partial<QuestionCreate
 
 export async function deleteQuestion(id: number) {
   return await api.delete(`/questions/${id}`)
+}
+
+export async function toggleLikeQuestion(id: number) {
+  return await api.post(`/questions/${id}/like`)
 }
