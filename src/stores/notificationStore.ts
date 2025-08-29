@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import {
   fetchNotifications,
   markNotificationRead,
-  markAllNotificationsRead,
   type Notification,
 } from '@/api/notifications'
 
@@ -27,13 +26,8 @@ export const useNotificationStore = defineStore('notification', {
         console.error('Lỗi khi markAsRead:', e)
       }
     },
-    async markAllAsRead() {
-      try {
-        await markAllNotificationsRead()
-        this.items.forEach((n) => (n.read = true)) // đổi sang read
-      } catch (e) {
-        console.error('Lỗi khi markAllAsRead:', e)
-      }
+    reset() {
+      this.items = [] // 👈 clear state khi logout
     },
   },
 })

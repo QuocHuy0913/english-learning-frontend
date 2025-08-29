@@ -1,6 +1,7 @@
 import { fetchProfile, login, refreshTokens } from '@/api/auth'
 import { decodeJwt } from 'jose'
 import { defineStore } from 'pinia'
+import { useNotificationStore } from './notificationStore'
 
 interface User {
   id: number
@@ -55,6 +56,8 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('user')
+      const notificationStore = useNotificationStore()
+      notificationStore.$reset()
     },
 
     async login(email: string, password: string) {

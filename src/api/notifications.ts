@@ -35,8 +35,3 @@ export async function readNotification(id: number) {
 export async function markNotificationRead(id: number) {
   return await api.patch<Notification>(`/notifications/${id}/read`, {})
 }
-
-// Đánh dấu tất cả là đã đọc
-export async function markAllNotificationsRead() {
-  return await api.patch('/notifications/read-all', {})
-}
