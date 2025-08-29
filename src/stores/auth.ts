@@ -18,10 +18,9 @@ interface AuthState {
 
 function isTokenExpired(token: string): boolean {
   try {
-    const payload: Record<string, unknown> = decodeJwt(token)
+    const { exp } = decodeJwt(token) as { exp?: number }
     const now = Math.floor(Date.now() / 1000)
-    const exp = typeof payload.exp === 'number' ? payload.exp : Number(payload.exp)
-    return exp < now
+    return !exp || exp < now
   } catch {
     return true
   }
