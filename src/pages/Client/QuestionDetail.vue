@@ -151,7 +151,7 @@ onMounted(loadData);
          class="card shadow-sm mb-4 border-success border-2">
       <div class="card-body">
         <div class="d-flex justify-content-between mb-2">
-          <h3 class="card-title fw-bold me-3">{{ question.title }}</h3>
+          <h3 class="card-title fw-bold me-2">{{ question.title }}</h3>
           <div class="flex-column flex-md-row gap-2">
             <!-- Nút Sửa/Xóa: chỉ cho chính chủ -->
             <div v-if="authStore.user?.id === question.user.id"
