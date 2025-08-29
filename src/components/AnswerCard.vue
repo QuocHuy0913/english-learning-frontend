@@ -109,26 +109,30 @@ const submitReport = async () => {
 <template>
   <div class="card mb-2 p-3">
     <!-- Nội dung answer -->
-    <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+    <!-- Header của answer -->
+    <div class="mb-2">
       <!-- Nội dung -->
-      <div class="flex-grow-1 me-3"
-           style="white-space: pre-line; margin-bottom:0;">
+      <div class="mb-2"
+           style="white-space: pre-line;">
         <template v-if="!isEditing">{{ editedContent }}</template>
         <template v-else>
           <textarea v-model="editedContent"
                     class="form-control"></textarea>
-          <div class="mt-1 d-flex gap-2">
-            <button class="btn btn-sm btn-success mt-1"
+          <div class="mt-1 d-flex gap-2 flex-wrap">
+            <button class="btn btn-sm btn-success"
                     :disabled="saving"
                     @click="saveEdit">Lưu</button>
-            <button class="btn btn-sm btn-secondary mt-1"
+            <button class="btn btn-sm btn-secondary"
                     :disabled="saving"
                     @click="cancelEdit">Hủy</button>
           </div>
         </template>
       </div>
+      <!-- Người đăng -->
+      <small class="text-muted d-block mb-2"> Bởi {{ answer.user.name }} — {{ new
+        Date(answer.created_at).toLocaleString() }} </small>
       <!-- Các nút hành động -->
-      <div class="d-flex flex-wrap gap-2 mt-2 mt-sm-0">
+      <div class="d-flex flex-wrap gap-2">
         <button v-if="canEdit && !isEditing"
                 class="btn btn-sm btn-outline-primary"
                 @click="startEdit">Sửa</button>
