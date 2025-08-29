@@ -168,7 +168,9 @@ onMounted(loadData);
                  class="mt-2 me-0">
               <button class="btn btn-outline-danger d-flex align-items-center gap-1 px-3 py-1"
                       @click="onReport">
-                <i class="bi bi-flag me-1"></i> Báo cáo </button>
+                <i class="bi bi-flag"></i>
+                <span>Báo cáo</span>
+              </button>
             </div>
           </div>
         </div>
