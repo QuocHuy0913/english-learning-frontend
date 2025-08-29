@@ -128,6 +128,7 @@ src/
 ---
 
 ⚙️ Cài đặt và chạy dự án
+
 1️⃣ Clone repository
 
 git clone https://github.com/QuocHuy0913/english-learning-frontend.git
