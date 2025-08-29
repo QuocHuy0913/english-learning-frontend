@@ -13,6 +13,10 @@ const total = ref(0)
 const search = ref('')
 const filterType = ref<'all' | 'global' | 'user' | 'unread'>('all')
 
+const userSearch = ref('')
+const searchResults = ref<User[]>([])
+const selectedUser = ref<User | null>(null)
+
 const users = ref<User[]>([])
 const showCreateModal = ref(false)
 const newNotification = ref({
@@ -90,6 +94,22 @@ const deleteNotification = async (id: number) => {
     await api.deleteNotification(id)
     loadNotifications()
   }
+}
+
+const searchUsers = async () => {
+  if (userSearch.value.length < 2) {
+    searchResults.value = []
+    return
+  }
+  const res = await api.listUsers(1, 10, userSearch.value) // backend cần hỗ trợ search
+  searchResults.value = res.items
+}
+
+const selectUser = (u: User) => {
+  selectedUser.value = u
+  newNotification.value.userId = u.id
+  userSearch.value = `${u.name} (${u.email})`
+  searchResults.value = []
 }
 
 const filtered = computed(() => {
@@ -225,14 +245,22 @@ const unreadCount = computed(() => notifications.value.filter(n => !n.read).leng
             <div v-if="!newNotification.isGlobal"
                  class="mb-3">
               <label class="form-label fw-semibold">Người nhận (nếu không toàn hệ thống)</label>
-              <select v-model="newNotification.userId"
-                      class="form-select">
-                <option disabled
-                        value="">Chọn người dùng</option>
-                <option v-for="u in users"
-                        :key="u.id"
-                        :value="u.id"> {{ u.name }} ({{ u.email }}) </option>
-              </select>
+              <input v-model="userSearch"
+                     type="text"
+                     class="form-control"
+                     placeholder="Tìm người dùng theo tên hoặc email"
+                     @input="searchUsers" />
+              <ul v-if="searchResults.length > 0"
+                  class="list-group mt-2">
+                <li v-for="u in searchResults"
+                    :key="u.id"
+                    class="list-group-item list-group-item-action"
+                    @click="selectUser(u)"> {{ u.name }} ({{ u.email }}) </li>
+              </ul>
+              <div v-if="selectedUser"
+                   class="mt-2">
+                <span class="badge bg-dark">Đã chọn: {{ selectedUser.name }} ({{ selectedUser.email }})</span>
+              </div>
             </div>
           </div>
           <div class="d-flex justify-content-end px-4 py-3">
@@ -281,17 +309,25 @@ const unreadCount = computed(() => notifications.value.filter(n => !n.read).leng
                    v-model="editingNotification.isGlobal" />
             <label class="form-check-label">Thông báo toàn hệ thống (tất cả người dùng)</label>
           </div>
-          <div v-if="!editingNotification.isGlobal"
+          <div v-if="!newNotification.isGlobal"
                class="mb-3">
-            <label class="form-label fw-semibold">Người nhận</label>
-            <select v-model="editingNotification.userId"
-                    class="form-select">
-              <option disabled
-                      value="">Chọn người dùng</option>
-              <option v-for="u in users"
-                      :key="u.id"
-                      :value="u.id"> {{ u.name }} ({{ u.email }}) </option>
-            </select>
+            <label class="form-label fw-semibold">Người nhận (nếu không toàn hệ thống)</label>
+            <input v-model="userSearch"
+                   type="text"
+                   class="form-control"
+                   placeholder="Tìm người dùng theo tên hoặc email"
+                   @input="searchUsers" />
+            <ul v-if="searchResults.length > 0"
+                class="list-group mt-2">
+              <li v-for="u in searchResults"
+                  :key="u.id"
+                  class="list-group-item list-group-item-action"
+                  @click="selectUser(u)"> {{ u.name }} ({{ u.email }}) </li>
+            </ul>
+            <div v-if="selectedUser"
+                 class="mt-2">
+              <span class="badge bg-dark">Đã chọn: {{ selectedUser.name }} ({{ selectedUser.email }})</span>
+            </div>
           </div>
         </div>
         <div class="d-flex justify-content-end px-4 py-3">
