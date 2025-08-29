@@ -156,8 +156,6 @@ const submitReport = async () => {
         <i :class="liked ? 'bi bi-hand-thumbs-up-fill' : 'bi bi-hand-thumbs-up'"></i>
       </button>
       <span>{{ likeCount }}</span>
-      <small class="text-muted ms-auto"> Bởi {{ answer.user.name }} — {{ new Date(answer.created_at).toLocaleString() }}
-      </small>
     </div>
     <!-- Reply button -->
     <div class="mt-2">
