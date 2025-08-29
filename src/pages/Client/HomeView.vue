@@ -148,7 +148,7 @@ onMounted(() => {
         <div class="col-lg-3 mb-4">
           <!-- Đặt câu hỏi -->
           <div class="sidebar-sticky">
-            <div class="card shadow-sm border-0 mb-4 p-3">
+            <div class="card shadow-sm border-0 mb-4 p-3 menu">
               <h6 class="fw-bold mb-3">Có thắc mắc gì không?</h6>
               <p class="small text-muted">Hãy hỏi và nhận trợ giúp từ cộng đồng học tiếng Anh thân thiện</p>
               <button class="btn btn-success w-100 rounded-3"
@@ -156,9 +156,9 @@ onMounted(() => {
                 <i class="bi bi-plus-lg me-1"></i> Đặt câu hỏi </button>
             </div>
             <!-- Thống kê cộng đồng -->
-            <div class="card shadow-sm border-0 mb-4 p-3">
+            <div class="card shadow-sm border-0 mb-4 p-3 menu">
               <h6 class="fw-bold mb-3">Cộng đồng</h6>
-              <p class="mb-3"><i class="bi bi-people me-3"></i>{{ totalUsers.toLocaleString() }} Thành viên</p>
+              <p class="mb-3"><i class="bi bi-people me-3 menu"></i>{{ totalUsers.toLocaleString() }} Thành viên</p>
               <p class="mb-3"><i class="bi bi-chat-left-text me-3"></i>{{ totalQuestions.toLocaleString() }} Câu hỏi</p>
               <p><i class="bi bi-activity text-success me-3"></i>{{ totalLikes.toLocaleString() }} Lượt thích</p>
             </div>
@@ -310,6 +310,10 @@ onMounted(() => {
 .sidebar-sticky {
   position: sticky;
   top: 1rem;
+}
+
+.menu {
+  background-color: #f0fdf4;
 }
 
 /* Badge vàng */
