@@ -76,7 +76,7 @@ async function loadNotifications() {
       .filter(n => n.isGlobal)
       .sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at))[0]
 
-    if (latestGlobal && !latestGlobal.read) {
+    if (latestGlobal) {
       latestNotification.value = latestGlobal
       showPopup.value = true
     }
