@@ -1,7 +1,5 @@
 # 🌐 Cộng đồng trao đổi học tiếng Anh - Frontend
 
-# 🌐 Cộng đồng trao đổi học tiếng Anh - Frontend
-
 Dự án **Frontend** của nền tảng **Cộng đồng trao đổi học tiếng Anh**, nơi người dùng có thể đặt câu hỏi, trả lời, thảo luận và chia sẻ kiến thức tiếng Anh.  
 
 Ứng dụng được phát triển bằng **Vue 3** kết hợp **Pinia** để quản lý state, giao tiếp với **Backend (NestJS)** thông qua **JWT Authentication**.  
