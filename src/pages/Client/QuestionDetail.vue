@@ -135,7 +135,7 @@ async function submitReport() {
 onMounted(loadData);
 </script>
 <template>
-  <div class="container mt-4 p-0"
+  <div class="container m-4 p-2"
        style="max-width: 720px;">
     <button class="btn btn-outline-success mb-3 fw-semibold"
             @click="router.back()">
