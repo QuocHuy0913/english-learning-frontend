@@ -1,47 +1,50 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, onMounted, ref, watch } from 'vue';
-import { fetchAnswersByQuestion } from '../api/answers';
-import { toggleLikeQuestion, type Question } from '../api/questions';
+import { defineProps, defineEmits, onMounted, ref, watch } from 'vue'
+import { fetchAnswersByQuestion } from '../api/answers'
+import { toggleLikeQuestion, type Question } from '../api/questions'
 
-const props = defineProps<{ question: Question }>();
-const emit = defineEmits(['select']);
+const props = defineProps<{ question: Question }>()
+const emit = defineEmits(['select'])
 
-const answersCount = ref<number>(0);
-const likesCount = ref<number>(props.question.likesCount ?? 0);
-const liked = ref<boolean>(props.question.liked ?? false);
+const answersCount = ref<number>(0)
 
-const onClick = () => {
-  emit('select', props.question.id);
-};
+// ✅ state cục bộ, copy từ props
+const likesCount = ref<number>(props.question.likesCount ?? 0)
+const liked = ref<boolean>(props.question.liked ?? false)
 
-const toggleLike = async (e: Event) => {
-  e.stopPropagation();
-  try {
-    const res = await toggleLikeQuestion(props.question.id);
-    likesCount.value = res.data.likesCount; // ✅ OK vì là ref
-    liked.value = res.data.liked;
-  } catch (err) {
-    console.error('Like error:', err);
-  }
-};
-
+// Khi props.question thay đổi (vd: reload list), đồng bộ lại
 watch(
   () => props.question,
   (newQ) => {
-    likesCount.value = newQ.likesCount ?? 0;
-    liked.value = newQ.liked ?? false;
+    likesCount.value = newQ.likesCount ?? 0
+    liked.value = newQ.liked ?? false
   },
-  { immediate: true }
-);
+  { immediate: true, deep: true }
+)
+
+const onClick = () => {
+  emit('select', props.question.id)
+}
+
+const toggleLike = async (e: Event) => {
+  e.stopPropagation()
+  try {
+    const res = await toggleLikeQuestion(props.question.id)
+    likesCount.value = res.data.likesCount
+    liked.value = res.data.liked
+  } catch (err) {
+    console.error('Like error:', err)
+  }
+}
 
 onMounted(async () => {
   try {
-    const res = await fetchAnswersByQuestion(props.question.id);
-    answersCount.value = res.data.length;
+    const res = await fetchAnswersByQuestion(props.question.id)
+    answersCount.value = res.data.length
   } catch {
-    answersCount.value = 0;
+    answersCount.value = 0
   }
-});
+})
 </script>
 <template>
   <div class="card mb-3 shadow-sm border-start border question-card"
