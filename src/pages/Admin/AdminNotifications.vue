@@ -309,7 +309,7 @@ const unreadCount = computed(() => notifications.value.filter(n => !n.read).leng
                    v-model="editingNotification.isGlobal" />
             <label class="form-check-label">Thông báo toàn hệ thống (tất cả người dùng)</label>
           </div>
-          <div v-if="!newNotification.isGlobal"
+          <div v-if="!editingNotification.isGlobal"
                class="mb-3">
             <label class="form-label fw-semibold">Người nhận (nếu không toàn hệ thống)</label>
             <input v-model="userSearch"
