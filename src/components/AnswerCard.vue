@@ -133,10 +133,14 @@ const submitReport = async () => {
         <button class="btn btn-sm btn-outline-danger"
                 @click="deleteAnswer">Xóa</button>
       </div>
-      <div v-if="currentUser" class="ms-2">
-        <button class="btn btn-sm btn-outline-danger"
+      <div v-if="currentUser"
+           class="ms-2">
+        <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2 py-1"
+                style="white-space: nowrap;"
                 @click="onReport">
-          <i class="bi bi-flag"></i> Báo cáo </button>
+          <i class="bi bi-flag"></i>
+          <span>Báo cáo</span>
+        </button>
       </div>
     </div>
     <!-- Like -->
