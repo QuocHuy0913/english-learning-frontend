@@ -151,7 +151,7 @@ onMounted(loadData);
          class="card shadow-sm mb-4 border-success border-2">
       <div class="card-body">
         <div class="d-flex justify-content-between mb-2">
-          <h3 class="card-title fw-bold me-2">{{ question.title }}</h3>
+          <h3 class="card-title fw-bold me-3">{{ question.title }}</h3>
           <div class="flex-column flex-md-row gap-2">
             <!-- Nút Sửa/Xóa: chỉ cho chính chủ -->
             <div v-if="authStore.user?.id === question.user.id"
@@ -166,7 +166,7 @@ onMounted(loadData);
             <!-- Nút Báo cáo: chỉ cần đăng nhập -->
             <div v-if="authStore.accessToken"
                  class="me-0">
-              <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 p-0"
+              <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2 py-1"
                       @click="onReport">
                 <i class="bi bi-flag"></i>
                 <span>Báo cáo</span>
