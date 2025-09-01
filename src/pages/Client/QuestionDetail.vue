@@ -176,7 +176,7 @@ onMounted(loadData);
             <div class="flex-column flex-md-row gap-2">
               <!-- Nút Sửa/Xóa: chỉ cho chính chủ -->
               <div v-if="authStore.user?.id === question.user.id"
-                   class="d-flex gap-2">
+                   class="d-flex gap-2 mb-2">
                 <button class="btn btn-success d-flex align-items-center"
                         @click="onUpdate">
                   <i class="bi bi-pencil-square me-1"></i> Sửa </button>
