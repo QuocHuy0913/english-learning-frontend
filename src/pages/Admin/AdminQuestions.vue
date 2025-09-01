@@ -69,11 +69,11 @@ onMounted(() => {
           <tr>
             <th style="width: 15%"
                 class="ps-3">Tiêu đề</th>
-            <th style="width: 25%">Nội dung</th>
+            <th style="width: 20%">Nội dung</th>
             <th style="width: 10%"
                 class="text-center">Tác giả</th>
             <th style="width: 20%">Tags</th>
-            <th style="width: 10%"
+            <th style="width: 15%"
                 class="text-center">Số câu trả lời</th>
             <th style="width: 10%"
                 class="text-center">Ngày tạo</th>
