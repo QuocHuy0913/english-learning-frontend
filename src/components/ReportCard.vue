@@ -3,13 +3,13 @@
     <div class="card-body">
       <div class="d-flex flex-wrap justify-content-between align-items-start mb-2">
         <!-- Bên trái -->
-        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
           <h5 class="mb-0">Báo cáo #{{ props.id }}</h5>
           <span class="badge bg-danger">{{ props.targetType }}</span>
           <span :class="statusBadgeClass"> {{ localStatus }} </span>
         </div>
         <!-- Bên phải -->
-        <div class="d-flex flex-wrap gap-2 mb-3">
+        <div class="d-flex flex-wrap gap-2">
           <button class="btn btn-sm btn-outline-secondary"
                   @click="openDetail"
                   title="Xem chi tiết">
