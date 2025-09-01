@@ -39,7 +39,14 @@
       </div>
       <p class="mb-2"><strong>Người báo cáo:</strong> {{ props.reporter.email }}</p>
       <p class="mb-2"><strong>Lý do:</strong> {{ props.reason }}</p>
-      <p class="mb-2 text-muted small">Đối tượng: {{ props.targetType }} #{{ props.targetId }}</p>
+      <p class="mb-2 text-muted small">
+        <strong>Đối tượng:</strong> {{ props.targetType === 'question' ? 'Câu hỏi' : 'Câu trả lời' }} #{{ props.targetId
+        }}
+      </p>
+      <p v-if="props.targetTitle"
+         class="mb-2">
+        <strong>Tiêu đề:</strong> <em>{{ props.targetTitle }}</em>
+      </p>
       <p class="text-muted small mb-0">{{ formatDate(props.created_at) }}</p>
     </div>
   </div>

@@ -4,57 +4,67 @@
     <div class="modal-content p-3">
       <!-- Header -->
       <div class="modal-header">
-        <h5 class="modal-title">Report Details #{{ report.id }}</h5>
+        <h5 class="modal-title">Chi tiết báo cáo #{{ report.id }}</h5>
         <button type="button"
                 class="btn-close btn-secondary"
                 @click="close"></button>
       </div>
       <!-- Body -->
       <div class="modal-body">
-        <!-- Type + Target ID -->
+        <!-- Loại + Trạng thái -->
         <div class="row mb-2">
           <div class="col">
-            <strong>Type:</strong>
-            <div>{{ report.targetType }}</div>
+            <strong>Đối tượng:</strong>
+            <div>
+              <span v-if="report.targetType === 'question'">Câu hỏi</span>
+              <span v-else-if="report.targetType === 'answer'">Câu trả lời</span>
+              <span v-else>Bình luận</span>
+            </div>
           </div>
           <div class="col">
-            <strong>Target ID:</strong>
-            <div>{{ report.targetId }}</div>
-          </div>
-        </div>
-        <!-- Reporter -->
-        <!-- Status -->
-        <div class="row mb-2">
-          <div class="col">
-            <strong>Reporter:</strong>
-            <div>{{ report.reporter.name }} ({{ report.reporter.email }})</div>
-          </div>
-          <div class="col">
-            <strong>Status:</strong>
+            <strong>Trạng thái:</strong>
             <div>
               <div class="badge"
-                    :class="{
-                      'bg-warning text-dark': report.status === 'pending',
-                      'bg-secondary': report.status === 'reviewed'
-                    }"> {{ report.status }} </div>
+                   :class="{
+                    'bg-warning text-dark': report.status === 'pending',
+                    'bg-secondary': report.status === 'reviewed'
+                  }"> {{ report.status }} </div>
             </div>
           </div>
         </div>
-        <!-- Reason -->
+        <!-- Người đăng target -->
+        <div class="mb-2">
+          <strong>Người đăng đối tượng:</strong>
+          <div v-if="report.targetUser"> {{ report.targetUser.name }} ({{ report.targetUser.email }}) </div>
+          <div v-else
+               class="text-muted">Không xác định</div>
+        </div>
+        <!-- Tiêu đề / Nội dung -->
+        <div v-if="report.targetTitle"
+             class="mb-2">
+          <strong>Tiêu đề/Nội dung:</strong>
+          <div class="text-truncate">{{ report.targetTitle }}</div>
+        </div>
+        <!-- Người báo cáo -->
+        <div class="mb-2">
+          <strong>Người báo cáo:</strong>
+          <div>{{ report.reporter.name }} ({{ report.reporter.email }})</div>
+        </div>
+        <!-- Lý do -->
         <div class="mb-3">
-          <strong>Reason:</strong>
+          <strong>Lý do:</strong>
           <textarea class="form-control mt-1"
                     rows="3"
                     disabled
                     :value="report.reason"></textarea>
         </div>
-        <!-- Dates -->
+        <!-- Ngày tạo & cập nhật -->
         <div class="d-flex text-muted justify-content-between">
           <div>
-            <strong>Created:</strong> {{ formatDate(report.created_at) }}
+            <strong>Ngày tạo:</strong> {{ formatDate(report.created_at) }}
           </div>
           <div>
-            <strong>Updated:</strong> {{ formatDate(report.updated_at) }}
+            <strong>Ngày cập nhật:</strong> {{ formatDate(report.updated_at) }}
           </div>
         </div>
       </div>
@@ -74,23 +84,13 @@ const emit = defineEmits<{
   (e: "review", id: number, newStatus: string): void
 }>()
 
-// local state cho status
-import { ref, watch } from "vue"
-const status = ref(report.status)
-
-// nếu report thay đổi thì sync lại status
-watch(() => report.status, (val) => {
-  status.value = val
-})
-
 const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleString()
+  return new Date(dateStr).toLocaleString("vi-VN")
 }
 
 const close = () => {
   emit("close")
 }
-
 </script>
 <style scoped>
 .modal-backdrop {
@@ -112,17 +112,12 @@ const close = () => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.modal-header,
-.modal-footer {
+.modal-header {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #ddd;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.modal-footer {
-  border-top: 1px solid #ddd;
 }
 
 .modal-body {

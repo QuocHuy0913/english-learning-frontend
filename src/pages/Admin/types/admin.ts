@@ -22,6 +22,12 @@ export interface ReportDto {
   status: ReportStatus
   created_at: string
   updated_at: string
+  targetTitle?: string
+  targetUser?: {
+    id: number
+    name: string
+    email: string
+  } | null
 }
 
 export interface ReportResponse {
