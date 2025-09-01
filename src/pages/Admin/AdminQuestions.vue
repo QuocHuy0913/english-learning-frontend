@@ -26,11 +26,10 @@ async function loadQuestions() {
   loading.value = true
   try {
     const res = await fetchQuestions(page.value, limit.value)
-    questions.value = res.data.items   // backend giả sử trả { items, total }
+    questions.value = res.data.items
     total.value = res.data.total
     totalQuestions.value = res.data.total
 
-    // sau khi có danh sách câu hỏi thì mới lấy answersCount
     for (const q of questions.value) {
       try {
         const resAns = await fetchAnswersByQuestion(q.id)
@@ -62,7 +61,7 @@ onMounted(() => {
   <div class="card p-3">
     <h4 class="m-0">Quản lý câu hỏi</h4>
     <div v-if="loading"
-         class="alert alert-info">Đang tải...</div>
+         class="alert alert-info mt-3">Đang tải...</div>
     <div v-else class="table-responsive">
       <table class="table table-striped table-hover align-middle mt-4">
         <thead class="table-success">
