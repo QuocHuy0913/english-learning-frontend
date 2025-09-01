@@ -59,7 +59,7 @@ onMounted(async () => {
       <!-- User + thời gian -->
       <div class="d-flex align-items-center mb-2 text-muted small">
         <div class="avatar me-2">
-          <i class="bi bi-person-fill text-white"></i>
+          <i class="bi bi-person-fill text-secondary"></i>
         </div>
         <span class="fw-semibold">{{ question.user.name }}</span>
         <span class="ms-2">• {{ new Date(question.created_at).toLocaleString() }}</span>

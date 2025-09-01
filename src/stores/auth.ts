@@ -62,8 +62,16 @@ export const useAuthStore = defineStore('auth', {
 
     async login(email: string, password: string) {
       const { data } = await login({ email, password })
+
+      if (data.user.status === 'banned') {
+        alert('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.')
+        this.logout()
+        return
+      }
+
       this.setTokens(data.accessToken, data.refreshToken)
       this.setUser(data.user)
+
       const notificationStore = useNotificationStore()
       await notificationStore.loadAll()
     },
@@ -105,6 +113,13 @@ export const useAuthStore = defineStore('auth', {
           return
         }
         await this.fetchProfile()
+
+        if (this.user?.status === 'banned') {
+          alert('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.')
+          this.logout()
+          return
+        }
+
         const notificationStore = useNotificationStore()
         await notificationStore.loadAll()
       } catch {

@@ -13,21 +13,23 @@ defineProps<{
       <!-- BÊN TRÁI: tiêu đề + nhãn -->
       <div class="pe-3">
         <div class="mb-2 d-flex align-items-center flex-wrap gap-2">
-          <span class="fw-semibold fs-5">{{ notification.title }}</span>
+          <div class="fw-semibold fs-5">{{ notification.title }}</div>
           <!-- Global/User badge -->
-          <span v-if="notification.isGlobal"
-                class="badge rounded-pill bg-dark d-inline-flex align-items-center">
-            <i class="bi bi-globe me-1"></i> Toàn hệ thống </span>
-          <span v-else
-                class="badge rounded-pill bg-secondary d-inline-flex align-items-center">
-            <i class="bi bi-people me-1"></i> Người dùng </span>
-          <!-- Read/Unread badge -->
-          <span v-if="notification.read && !notification.isGlobal"
-                class="badge rounded-pill bg-secondary d-inline-flex align-items-center">
-            <i class="bi bi-envelope-open me-1"></i> Đã đọc </span>
-          <span v-else-if="!notification.read && !notification.isGlobal"
-                class="badge rounded-pill bg-danger d-inline-flex align-items-center">
-            <i class="bi bi-envelope-fill me-1"></i> Chưa đọc </span>
+          <div>
+            <span v-if="notification.isGlobal"
+                  class="badge rounded-pill bg-dark d-inline-flex align-items-center">
+              <i class="bi bi-globe me-1"></i> Toàn hệ thống </span>
+            <span v-else
+                  class="badge rounded-pill bg-secondary d-inline-flex align-items-center">
+              <i class="bi bi-people me-1"></i> Người dùng </span>
+            <!-- Read/Unread badge -->
+            <span v-if="notification.read && !notification.isGlobal"
+                  class="badge rounded-pill bg-secondary d-inline-flex align-items-center">
+              <i class="bi bi-envelope-open me-1"></i> Đã đọc </span>
+            <span v-else-if="!notification.read && !notification.isGlobal"
+                  class="badge rounded-pill bg-danger d-inline-flex align-items-center">
+              <i class="bi bi-envelope-fill me-1"></i> Chưa đọc </span>
+          </div>
         </div>
         <!-- Nội dung -->
         <p class="text-muted mb-2">Nội dung: {{ notification.content }}</p>

@@ -66,41 +66,43 @@ onMounted(() => {
         <i class="bi bi-question-circle me-2"></i> {{ ansList[0].question?.title }}
       </div>
       <!-- Bảng câu trả lời -->
-      <table class="table table-striped table-hover align-middle">
-        <thead class="thead-purple">
-          <tr>
-            <th style="width: 40%">Nội dung</th>
-            <th style="width: 15%"
-                class="text-center">Tác giả</th>
-            <th style="width: 10%"
-                class="text-center">Số like</th>
-            <th style="width: 15%"
-                class="text-center">Ngày tạo</th>
-            <th style="width: 10%"
-                class="text-center">Ngày cập nhật</th>
-            <th style="width: 10%"
-                class="text-center">Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="a in ansList"
-              :key="a.id">
-            <td>{{ a.content }}</td>
-            <td class="text-center">{{ a.user.name }}</td>
-            <td class="text-center">
-              <i class="bi bi-hand-thumbs-up me-1"></i>{{ a.like_count ?? 0 }}
-            </td>
-            <td class="text-center">{{ new Date(a.created_at).toLocaleDateString() }}</td>
-            <td class="text-center">{{ new Date(a.updated_at).toLocaleDateString() }}</td>
-            <td class="text-center">
-              <button class="btn btn-sm btn-outline-danger"
-                      @click="handleDelete(a.id)">
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="thead-purple">
+            <tr>
+              <th style="width: 40%">Nội dung</th>
+              <th style="width: 15%"
+                  class="text-center">Tác giả</th>
+              <th style="width: 10%"
+                  class="text-center">Số like</th>
+              <th style="width: 15%"
+                  class="text-center">Ngày tạo</th>
+              <th style="width: 10%"
+                  class="text-center">Ngày cập nhật</th>
+              <th style="width: 10%"
+                  class="text-center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="a in ansList"
+                :key="a.id">
+              <td>{{ a.content }}</td>
+              <td class="text-center">{{ a.user.name }}</td>
+              <td class="text-center">
+                <i class="bi bi-hand-thumbs-up me-1"></i>{{ a.like_count ?? 0 }}
+              </td>
+              <td class="text-center">{{ new Date(a.created_at).toLocaleDateString() }}</td>
+              <td class="text-center">{{ new Date(a.updated_at).toLocaleDateString() }}</td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-outline-danger"
+                        @click="handleDelete(a.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <!-- Pagination -->
     <nav>

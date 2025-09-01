@@ -141,7 +141,7 @@ const unreadCount = computed(() => notifications.value.filter(n => !n.read).leng
       </div>
       <button class="btn btn-dark"
               @click="showCreateModal = true">
-        <i class="bi bi-plus-lg me-1"></i> Tạo Thông báo </button>
+        <i class="bi bi-plus-lg me-1"></i> Thông báo </button>
     </div>
     <!-- Stats -->
     <div class="row g-4 mb-4">

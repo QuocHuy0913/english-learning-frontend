@@ -315,8 +315,4 @@ input:focus {
   box-shadow: none;
   outline: none;
 }
-
-.table-responsive {
-  overflow: visible !important;
-}
 </style>

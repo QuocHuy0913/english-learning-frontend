@@ -1,18 +1,20 @@
 <template>
   <div class="card shadow-sm border-danger report-card p-3">
     <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="d-flex flex-wrap justify-content-between align-items-start mb-2">
         <!-- Bên trái -->
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex flex-wrap align-items-center gap-2">
           <h5 class="mb-0">Báo cáo #{{ props.id }}</h5>
           <span class="badge bg-danger">{{ props.targetType }}</span>
           <span :class="statusBadgeClass"> {{ localStatus }} </span>
         </div>
         <!-- Bên phải -->
-        <div class="d-flex gap-2">
+        <div class="d-flex flex-wrap gap-2">
           <button class="btn btn-sm btn-outline-secondary"
-                  @click="openDetail">
-            <i class="bi bi-eye"></i> Xem chi tiết </button>
+                  @click="openDetail"
+                  title="Xem chi tiết">
+            <i class="bi bi-eye"></i>
+          </button>
           <!-- Dropdown đổi trạng thái -->
           <div class="dropdown">
             <button class="btn btn-sm dropdown-toggle"
